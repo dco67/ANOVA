@@ -1,0 +1,99 @@
+# Vérifier les conditions {#sec-diagnostics}
+
+Toute la validité de l'ANOVA classique repose sur trois conditions. Les négliger, c'est risquer de bâtir une conclusion sur un test qui, dans ces données, ne contrôle plus ce qu'il prétend. L'onglet **Diagnostics** rassemble les outils pour les vérifier — et, nouveauté commode, une recommandation automatique du test approprié.
+
+## Les trois conditions
+
+L'ANOVA classique suppose :
+
+1. l'**indépendance** des observations — chaque mesure n'est influencée par aucune autre ;
+2. la **normalité** des résidus — les écarts au modèle suivent une loi normale ;
+3. l'**homogénéité des variances** (homoscédasticité) — la dispersion est la même dans tous les groupes.
+
+L'indépendance relève d'abord du plan d'expérience — c'est au moment de la collecte qu'elle se garantit — mais un indice s'en lit tout de même dans les résidus, comme on le verra plus bas. La normalité et l'homogénéité, elles, se testent et se *voient* directement.
+
+## La normalité
+
+Le sous-onglet affiche un test de **Shapiro-Wilk** [@shapiro1965] pour chaque groupe, ainsi que sur l'ensemble des résidus. Une valeur-$p$ élevée est rassurante : elle ne permet pas de rejeter la normalité. Une valeur-$p$ faible signale un écart. Deux précautions, toutefois. D'abord, sur de **grands** échantillons, le test devient si sensible qu'il rejette la normalité pour des écarts sans conséquence pratique. Ensuite, sur de **petits** échantillons, il manque de puissance et laisse passer des écarts réels. Le test ne remplace donc pas le coup d'œil au **graphique quantile-quantile** (QQ-plot) : si les points s'alignent sur la diagonale, la normalité est plausible ; s'ils s'incurvent en S ou décrochent aux extrémités, elle est douteuse.
+
+Un point mérite attention : mieux vaut juger la normalité **par groupe** que sur les résidus mis en commun. Quand les variances diffèrent d'un groupe à l'autre, les résidus poolés paraissent non normaux alors que chaque groupe, pris seul, l'est parfaitement — l'hétéroscédasticité se déguise en non-normalité. C'est la logique retenue par la recommandation automatique décrite plus bas.
+
+::: {.callout-note}
+## Labo 5.1 — Tester et voir la normalité
+**Objectif.** Confronter le verdict d'un test de normalité au graphique quantile-quantile.
+
+**Manipulation.**
+
+1. Simulez des données **normales**, ouvrez **Diagnostics ▸ Tests et graphiques** et lisez les tests de Shapiro-Wilk par groupe.
+2. Examinez le QQ-plot : les points suivent-ils la diagonale ?
+3. Si l'application le permet, régénérez avec une distribution **asymétrique** et comparez test et graphique.
+
+**Observez.** Sur des données normales, les points épousent la diagonale et Shapiro ne rejette pas $H_0$. Sur des données asymétriques, les points s'en écartent visiblement et le test réagit.
+
+**Question.** Sur un échantillon de $n = 8$, un test de Shapiro non significatif prouve-t-il la normalité ? Que peut-on affirmer, au juste ?
+:::
+
+## L'homogénéité des variances
+
+Trois tests se partagent la tâche. Le test de **Levene** [@levene1960] compare les écarts absolus à la médiane de chaque groupe — sa version fondée sur la médiane est robuste et fait référence. Le test de **Bartlett** [@bartlett1937] est plus puissant si les données sont normales, mais très sensible à la non-normalité. Le test de **Fligner-Killeen**, fondé sur les rangs, est le plus robuste des trois. Une valeur-$p$ faible indique des variances inégales, et oriente vers le test de Welch (@sec-anova).
+
+::: {.callout-note}
+## Labo 5.2 — Débusquer l'hétéroscédasticité
+**Objectif.** Détecter des variances inégales et comprendre ce qu'elles impliquent.
+
+**Manipulation.**
+
+1. Simulez trois groupes de même moyenne mais d'écarts-types très différents.
+2. Lisez les tests de **Levene**, **Bartlett** et **Fligner-Killeen** : concordent-ils ?
+3. Comparez leur verdict à ce que montrait déjà le boxplot (@sec-decrire).
+
+**Observez.** Les trois tests signalent l'hétérogénéité, mais Bartlett réagit plus fort — il confond en partie non-normalité et hétéroscédasticité. La boîte l'annonçait déjà : les tests confirment.
+
+**Question.** Pourquoi préférer Levene ou Fligner-Killeen à Bartlett quand la normalité est elle-même incertaine ?
+:::
+
+## L'indépendance : les résidus dans l'ordre
+
+L'indépendance des observations est la condition la plus difficile à vérifier après coup, car elle dépend de la façon dont les données ont été recueillies. Un indice existe pourtant : le graphique des **résidus dans l'ordre des observations**, ajouté à l'onglet Diagnostics. On y porte chaque résidu en fonction de son rang de collecte. Si les observations sont indépendantes, ce nuage ne montre aucune structure — les résidus se dispersent au hasard autour de zéro. En revanche, une **dérive** (les résidus montent ou descendent lentement) ou une **ondulation** trahit une dépendance sérielle : des mesures voisines dans le temps se ressemblent, souvent parce qu'un facteur non contrôlé a évolué pendant la collecte — fatigue de l'expérimentateur, dérive d'un instrument, apprentissage progressif.
+
+Ce diagnostic a ses limites : il ne repère que les dépendances liées à l'ordre de saisie, et suppose que cet ordre reflète l'ordre de collecte. Il ne remplace pas un plan d'expérience soigné. Mais quand une structure saute aux yeux, le signal est sérieux : l'ANOVA suppose l'indépendance, et sa violation peut fausser gravement les valeurs-$p$.
+
+::: {.callout-note}
+## Labo 5.4 — Chercher une dérive
+**Objectif.** Reconnaître une structure suspecte dans les résidus ordonnés.
+
+**Manipulation.**
+
+1. Simulez des données ordinaires et ouvrez, sous **Diagnostics**, le graphique **Résidus dans l'ordre des observations**.
+2. Observez le nuage : les points se répartissent-ils sans motif autour de zéro ? La courbe de lissage reste-t-elle plate ?
+3. Régénérez plusieurs fois pour vous familiariser avec l'aspect d'un nuage « sain ».
+
+**Observez.** Sur des données simulées indépendantes, aucune tendance ne se dégage. C'est le repère par rapport auquel juger de vraies données, où une dérive ou une vague signalerait un problème.
+
+**Question.** Citez une situation de collecte concrète où l'ordre des observations pourrait créer une dépendance entre mesures voisines.
+:::
+
+## Lire les graphiques diagnostiques
+
+Au-delà des tests, deux graphiques concentrent l'essentiel. Le **QQ-plot** juge la normalité, comme on l'a vu. Le graphique des **résidus en fonction des valeurs ajustées** juge l'homogénéité : si le nuage forme une bande d'épaisseur constante autour de zéro, les variances sont stables ; s'il s'évase en entonnoir, la dispersion croît avec le niveau — signe d'hétéroscédasticité. Ces graphiques disent souvent, d'un coup d'œil, ce que trois tests formalisent.
+
+## La recommandation automatique
+
+En tête de l'onglet, une carte **« Test recommandé »** synthétise les diagnostics et propose le test adapté. Sa logique reprend celle de ce chapitre : si la normalité (par groupe) et l'homogénéité tiennent, elle recommande l'**ANOVA classique** ; si les variances sont inégales, le **test de Welch** accompagné de **Games-Howell** ; si la normalité est douteuse, **Kruskal-Wallis** ou le **bootstrap**. C'est un guide, non un verdict : la carte invite toujours à confirmer par les graphiques.
+
+::: {.callout-note}
+## Labo 5.3 — Des diagnostics au choix du test
+**Objectif.** Faire le lien entre l'état des conditions et le test approprié.
+
+**Manipulation.**
+
+1. Simulez des données **normales et homogènes** : lisez la carte **Test recommandé** — elle devrait pointer vers l'ANOVA classique.
+2. Régénérez avec des variances **très inégales** : la recommandation bascule-t-elle vers Welch ?
+3. Régénérez avec une distribution fortement **asymétrique** : vers quel test la carte oriente-t-elle ?
+
+**Observez.** La recommandation suit fidèlement les diagnostics. Elle rend explicite la décision que ce chapitre a construite pas à pas.
+
+**Question.** La carte n'est qu'un guide : dans quel cas passeriez-vous outre sa recommandation, et sur quelle base ?
+:::
+
+Les conditions vérifiées, le test choisi, l'effet localisé — il reste à *éprouver* tout cela. Le dernier chapitre transforme le lecteur en expérimentateur : par simulation, il va voir de ses yeux comment les tests se comportent quand on maltraite leurs conditions.

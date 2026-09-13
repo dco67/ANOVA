@@ -1,0 +1,110 @@
+# Expérimenter {#sec-experimenter}
+
+Les chapitres précédents énonçaient des propriétés : « le test classique devient trop libéral sous variances inégales », « la puissance croît avec l'effectif ». L'onglet **Expérimentation** permet de les *vérifier soi-même*, par simulation. C'est le laboratoire au sens plein — on fixe la vérité, on répète l'expérience des centaines de fois, et l'on observe ce que les tests en font.
+
+## L'idée de la simulation Monte-Carlo
+
+Un test statistique est une procédure de décision : à partir d'un échantillon, il tranche entre $H_0$ et $H_1$. Sa qualité ne se juge pas sur un seul échantillon, mais sur son comportement à long terme. La simulation Monte-Carlo exploite cette idée : puisque nous *fabriquons* les données, nous connaissons la vérité, et nous pouvons répéter l'expérience autant de fois qu'il faut pour estimer deux quantités fondamentales.
+
+Sous $H_0$ vraie — aucune différence réelle —, la proportion de rejets estime le **taux d'erreur de type I**. Un bon test le maintient proche du seuil nominal $\alpha$. Sous $H_1$ vraie — une différence existe —, la proportion de rejets estime la **puissance**,
+
+$$
+\text{puissance} = P(\text{rejeter } H_0 \mid H_1 \text{ vraie}),
+$$
+
+c'est-à-dire la capacité à détecter ce qui est réellement là. Tout l'art d'un test est de contrôler le premier tout en maximisant la seconde.
+
+## L'interface en trois cartes
+
+L'onglet s'organise sur un seul écran. La carte **🧪 Scénario** réunit le menu de sélection et un **guide dynamique** qui, pour le scénario choisi, affiche son objectif, la marche à suivre et ce qu'il faut observer. La carte **🎛️ Contrôles** rassemble les paramètres — selon le scénario, les tailles ou les effets à comparer, le niveau d'hétérogénéité, le seuil $\alpha$, le nombre de répétitions — et le bouton **Lancer**. La carte **📊 Résultats** affiche le verdict de la simulation. Tout est sous les yeux : on lit une directive, on règle le contrôle voisin, on lance, on lit le résultat.
+
+Un principe traverse tous les laboratoires : **plus le nombre de répétitions est élevé, plus l'estimation est stable**. Quelques centaines suffisent pour dégager une tendance ; un millier affine.
+
+## Le taux d'erreur : les tests tiennent-ils leur promesse ?
+
+Le scénario le plus fondamental crée des groupes rigoureusement identiques. Sous cette $H_0$ vraie, un test calibré à $\alpha = 0{,}05$ ne devrait rejeter qu'environ 5 % du temps. La simulation le vérifie pour l'ANOVA classique, le test de Welch et Kruskal-Wallis simultanément.
+
+::: {.callout-note}
+## Labo 6.1 — Chacun respecte-t-il le seuil ?
+**Objectif.** Estimer le taux d'erreur de type I de trois tests sous $H_0$ vraie.
+
+**Manipulation.**
+
+1. Dans **🧪 Scénario**, choisissez **Aucune différence (H₀ vraie)**. Lisez le guide.
+2. Dans **🎛️ Contrôles**, laissez $\alpha = 0{,}05$ et portez les **répétitions à 1000**. Cliquez **Lancer**.
+3. Lisez, dans **📊 Résultats**, le taux de rejet de chaque test.
+
+**Observez.** Les trois taux avoisinent 5 %, chacun accompagné d'un verdict. Sous $H_0$, un test bien calibré tient sa promesse : il ne « trouve » une différence qu'environ une fois sur vingt.
+
+**Question.** Si un test rejetait 12 % du temps sous $H_0$, quelle en serait la conséquence pratique pour vos conclusions ?
+:::
+
+## La puissance : détecter ce qui existe
+
+Deux leviers gouvernent la puissance : la **taille d'échantillon** et l'**ampleur de l'effet**. Deux scénarios les isolent.
+
+::: {.callout-note}
+## Labo 6.2 — La puissance monte avec l'effectif
+**Objectif.** Mesurer l'effet de l'effectif sur la capacité de détection.
+
+**Manipulation.**
+
+1. Scénario **Impact de la taille d'échantillon**. Dans **Contrôles**, cochez plusieurs tailles — par exemple $n = 5, 15, 30, 100$.
+2. Réglez les répétitions à 500 et **Lancez**.
+3. Lisez la puissance atteinte pour chaque taille.
+
+**Observez.** La puissance croît régulièrement avec $n$. Une même différence réelle, indétectable à $n = 5$, devient presque certaine à détecter à $n = 100$.
+
+**Question.** À partir de quelle taille la puissance dépasse-t-elle 80 %, le seuil souvent visé dans la planification ?
+:::
+
+::: {.callout-note}
+## Labo 6.3 — La puissance monte avec l'effet
+**Objectif.** Relier l'ampleur de l'effet à la puissance.
+
+**Manipulation.**
+
+1. Scénario **Comparaison des tailles d'effet**. Dans **Contrôles**, cochez plusieurs effets — $d = 0{,}1\,;\,0{,}3\,;\,0{,}5\,;\,0{,}8$.
+2. Répétitions à 500, puis **Lancez**.
+
+**Observez.** À effectif fixé, un gros effet se détecte presque toujours, un effet minime presque jamais. À $d = 0{,}1$, la détection frôle le simple taux d'erreur.
+
+**Question.** Puissance et effectif étant liés, comment un petit effet réel peut-il rester indétectable même en augmentant beaucoup $n$ ?
+:::
+
+## Éprouver la robustesse
+
+Vient le plus instructif : maltraiter les conditions et regarder qui tient. Le scénario d'**hétérogénéité des variances** illustre le message central du @sec-anova.
+
+::: {.callout-note}
+## Labo 6.4 — Quand le test classique déraille
+**Objectif.** Voir, par simulation, l'ANOVA classique perdre le contrôle de son taux d'erreur.
+
+**Manipulation.**
+
+1. Scénario **Hétérogénéité des variances**. Dans **Contrôles**, choisissez le niveau **Extrême (1:10)**.
+2. Répétitions à 1000, puis **Lancez**.
+3. Comparez le taux de rejet de l'ANOVA classique et celui de Welch.
+
+**Observez.** Sous $H_0$ mais variances très inégales, l'ANOVA classique rejette bien au-delà de 5 % — elle est trop libérale —, tandis que Welch reste proche du seuil. L'avertissement théorique devient un fait mesuré.
+
+**Question.** Un test qui rejette 15 % du temps sous $H_0$ « découvre » des effets inexistants : pourquoi est-ce plus grave qu'un simple manque de puissance ?
+:::
+
+::: {.callout-note}
+## Labo 6.5 — Outliers et non-normalité
+**Objectif.** Comparer la robustesse des tests face aux valeurs extrêmes et à l'asymétrie.
+
+**Manipulation.**
+
+1. Explorez tour à tour les scénarios **Impact des outliers** et **Distributions non normales**, avec 500 répétitions.
+2. Pour chacun, comparez l'ANOVA classique aux approches robustes (Kruskal-Wallis, Welch selon le scénario).
+
+**Observez.** Les valeurs aberrantes et la forte asymétrie dégradent le test classique ; les tests de rangs, insensibles à l'ordre de grandeur des extrêmes, encaissent mieux le choc.
+
+**Question.** Après ces simulations, formuleriez-vous une règle personnelle pour choisir entre test classique et test robuste ?
+:::
+
+## De l'expérimentation à la pratique
+
+Ce chapitre boucle le manuel. Les propriétés énoncées — contrôle de l'erreur, puissance, robustesse — ne sont plus des affirmations à croire, mais des faits observés en manipulant. C'est tout l'esprit de ce laboratoire : *comprendre l'ANOVA en la mettant à l'épreuve*. Muni de ces intuitions, le lecteur abordera ses propres données avec le réflexe juste — décrire, vérifier les conditions, choisir le test adapté, mesurer l'ampleur autant que la significativité, et rester lucide sur ce qu'un test peut, ou ne peut pas, garantir.

@@ -1,0 +1,102 @@
+---
+title: "Glossaire : du manuel à l'écran"
+---
+
+# Glossaire : du manuel à l'écran {#sec-glossaire .unnumbered}
+
+Ce glossaire relie les **termes et symboles du manuel** à ce que vous voyez **à l'écran** dans l'application **ANOVA**. Chaque fois qu'un mot du texte semble différer d'un libellé de l'application, cherchez-le ici. Gardez cette page à portée de main pendant vos laboratoires.
+
+::: {.callout-note}
+Le manuel emploie les **sigles français** usuels : **SC** (somme de carrés), **ddl** (degrés de liberté) et **CM** (carré moyen). Dans les formules, les sources se notent en toutes lettres : $SC_{\text{inter}}$, $SC_{\text{intra}}$, $SC_{\text{totale}}$, $CM_{\text{inter}}$, $CM_{\text{intra}}$.
+:::
+
+## Le tableau d'ANOVA
+
+À l'écran : onglet **ANOVA → ANOVA classique**.
+
+| Notion (manuel) | Symbole | À l'écran |
+|:----------------|:-------:|:----------|
+| Source inter-groupes (le « signal ») | — | ligne **inter-groupes** |
+| Source intra-groupes (le « bruit », résiduelle) | — | ligne **intra-groupes** / résiduelle |
+| Somme de carrés | $SC$ | somme de carrés de chaque source |
+| Degrés de liberté | $ddl$ | degrés de liberté ($k-1$ et $N-k$) |
+| Carré moyen | $CM$ | carré moyen de chaque source |
+| Statistique du test | $F$ | valeur de **F** |
+| Seuil observé | $p$ | **valeur-p** |
+
+: Le tableau du test $F$ classique. {#tbl-gloss-anova1}
+
+::: {.callout-tip}
+Le rapport testé est $F = CM_{\text{inter}} / CM_{\text{intra}}$ : le carré moyen **inter** (variation entre les moyennes de groupe) rapporté au carré moyen **intra** (variation à l'intérieur des groupes). Voisin de 1, il indique un signal comparable au bruit ; nettement supérieur, il signale un effet.
+:::
+
+## Les tailles d'effet
+
+Sous le tableau, l'application affiche trois mesures d'ampleur (onglet **ANOVA → ANOVA classique**).
+
+| Notion (manuel) | Symbole | Rôle |
+|:----------------|:-------:|:-----|
+| Rapport de corrélation | $\eta^2$ | proportion de variance expliquée (un peu optimiste) |
+| Oméga carré | $\omega^2$ | même idée, corrigée du biais (peut être légèrement négatif) |
+| $f$ de Cohen | $f$ | effet réexprimé pour la **planification de la puissance** |
+
+: Les mesures de taille d'effet. {#tbl-gloss-effet1}
+
+## Choisir le bon test
+
+L'onglet **ANOVA** réunit le test classique et ses variantes robustes. Le choix dépend des **diagnostics**.
+
+| Situation | Test à utiliser | À l'écran (sous-onglet) |
+|:----------|:----------------|:------------------------|
+| Normalité et variances homogènes | ANOVA classique (le plus puissant) | **ANOVA classique** |
+| Variances **inégales** | Welch, ou Brown-Forsythe | **Test de Welch**, **Brown-Forsythe** |
+| Normalité **douteuse** | Kruskal-Wallis (rangs) | **Kruskal-Wallis** |
+| Distributions très irrégulières | test de la médiane | **Test de la médiane** |
+| Aucune hypothèse de loi | rééchantillonnage | **ANOVA Bootstrap** (non-param., param., résiduel) |
+| Planifier l'effectif | courbes de puissance | **Taille d'effet & Puissance** |
+
+: Le test adapté à chaque situation. {#tbl-gloss-tests}
+
+## Les comparaisons
+
+Une fois qu'un test omnibus a conclu à une différence, l'onglet **Comparaisons** précise *où* elle se loge.
+
+| Notion (manuel) | À l'écran (onglet Comparaisons) |
+|:----------------|:--------------------------------|
+| Comparaisons par paires (variances égales) | **Tukey HSD** |
+| Comparaisons par paires (variances inégales) | **Games-Howell**, **Dunnett T3** |
+| Comparaison très conservatrice / contrastes complexes | **Scheffé**, **Bonferroni** |
+| Contrastes planifiés | **Contrastes** (traitement, Helmert, somme, orthogonaux, adjacents, personnalisés) |
+| Effet graduel le long d'un facteur ordonné | **Tendances polynomiales** (linéaire, quadratique, ordre supérieur) |
+
+: Les méthodes de comparaison. {#tbl-gloss-comparaisons}
+
+## Les diagnostics
+
+À l'écran : onglet **Diagnostics → Tests et graphiques**.
+
+| Condition | Comment la vérifier | À l'écran |
+|:----------|:--------------------|:----------|
+| Normalité des résidus | graphique quantile-quantile + test | QQ-plot, test de **Shapiro-Wilk** |
+| Homogénéité des variances | test dédié | **Levene**, **Bartlett**, **Fligner-Killeen** |
+| Recommandation automatique | l'onglet suggère le test adapté | recommandation affichée |
+
+: Les diagnostics des postulats. {#tbl-gloss-diagnostics}
+
+## Onglets et gestes
+
+| Ce que vous voulez faire | Où, dans l'application |
+|:-------------------------|:----------------------|
+| Importer ou **simuler** des données (groupes, moyennes, écarts-types) | onglet **Introduction** (source *Importer* / *Simuler*) |
+| Explorer les données, voir la **décomposition inter/intra** | **Description des données → Visualisation** (*Décomposition (inter/intra)*) |
+| Lancer le test et lire les tailles d'effet | **ANOVA → ANOVA classique** |
+| Transformer la variable (racine, log, carré, inverse, arc-sinus) | menu **Transformation**, dans le panneau latéral |
+| Comparer les groupes deux à deux | onglet **Comparaisons** |
+| Vérifier les conditions | onglet **Diagnostics** |
+| Éprouver les tests par simulation Monte-Carlo | onglet **Expérimentation** (*Configuration des moyennes / tailles / écarts-types*) |
+
+: Guide d'accès rapide. {#tbl-gloss-onglets1}
+
+::: {.callout-tip}
+L'onglet **Expérimentation** répète une analyse des milliers de fois pour révéler le **taux d'erreur de type I** réellement observé — l'occasion de voir, par exemple, le test classique « déraper » sous variances et effectifs inégaux, là où Welch tient le seuil.
+:::

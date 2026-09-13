@@ -1,0 +1,194 @@
+# L'analyse de variance {#sec-anova}
+
+C'est le cœur de l'application. L'onglet **ANOVA** propose le test $F$ classique, puis toute une famille de variantes conçues pour les situations où les conditions du test classique ne tiennent pas. Ce chapitre les parcourt dans cet ordre : d'abord comprendre et lire le test classique, mesurer l'ampleur de l'effet, puis savoir vers quelle variante se tourner quand la réalité s'écarte du modèle idéal.
+
+## Le test $F$ classique
+
+Le sous-onglet **ANOVA classique** affiche le tableau d'analyse de variance : pour la source *inter-groupes* et la source *intra-groupes* (résiduelle), la somme de carrés, les degrés de liberté, le carré moyen, puis la statistique $F$ et sa valeur-$p$. On a vu au @sec-intro comment ce tableau naît de la décomposition $SC_{\text{totale}} = SC_{\text{inter}} + SC_{\text{intra}}$ et pourquoi
+
+$$
+F = \frac{CM_{\text{inter}}}{CM_{\text{intra}}}
+$$
+
+mesure le signal rapporté au bruit. Reste à le lire correctement. Une valeur-$p$ inférieure au seuil $\alpha$ conduit à rejeter $H_0$ : au moins une moyenne diffère. Mais le tableau ne dit ni *lesquelles* (ce sera l'objet du @sec-comparaisons), ni *de combien* — et c'est là qu'interviennent les tailles d'effet.
+
+## Mesurer l'ampleur : $\eta^2$, $\omega^2$, $f$ de Cohen
+
+Une valeur-$p$ répond à « l'effet est-il détectable ? », pas à « l'effet est-il important ? ». Avec de grands échantillons, une différence infime devient significative. L'application affiche donc, sous le tableau, trois mesures d'effet.
+
+Le **rapport de corrélation** $\eta^2$ est la proportion de variance totale expliquée par le facteur :
+
+$$
+\eta^2 = \frac{SC_{\text{inter}}}{SC_{\text{totale}}} .
+$$
+
+Il est intuitif mais légèrement optimiste : il surestime l'effet, surtout à petit échantillon. L'**oméga carré** corrige ce biais,
+
+$$
+\omega^2 = \frac{SC_{\text{inter}} - (k-1)\, CM_{\text{intra}}}{SC_{\text{totale}} + CM_{\text{intra}}},
+$$
+
+et peut même être légèrement négatif quand l'effet réel est nul. Enfin, le **$f$ de Cohen** réexprime l'effet sur une échelle commode pour la planification,
+
+$$
+f = \sqrt{\frac{\eta^2}{1 - \eta^2}},
+$$
+
+avec les repères usuels $0{,}10$ (faible), $0{,}25$ (moyen) et $0{,}40$ (fort).
+
+::: {.callout-tip}
+## À retenir
+La valeur-$p$ et la taille d'effet répondent à deux questions distinctes. Un $F$ significatif accompagné d'un $\eta^2$ minuscule signale surtout un grand échantillon, pas un effet marquant. Rapportez toujours les deux.
+:::
+
+::: {.callout-note}
+## Labo 3.1 — Lire un résultat complet
+**Objectif.** Lire ensemble la décision (valeur-$p$) et l'ampleur (tailles d'effet).
+
+**Manipulation.**
+
+1. Simulez **3 groupes** de moyennes 95, 100, 105, écart-type 15, $n = 30$ par groupe. **Générez**.
+2. Ouvrez **ANOVA ▸ ANOVA classique**. Relevez $F$, la valeur-$p$, puis $\eta^2$, $\omega^2$ et le $f$ de Cohen.
+3. Comparez $\eta^2$ et $\omega^2$ : lequel est le plus petit ?
+
+**Observez.** $\omega^2$ est toujours un peu inférieur à $\eta^2$ — c'est la correction du biais. Le $f$ de Cohen situe l'effet sur l'échelle faible/moyen/fort.
+
+**Question.** Pourquoi $\omega^2$ peut-il être négatif alors qu'une proportion de variance ne le peut pas ?
+:::
+
+::: {.callout-note}
+## Labo 3.2 — Significatif n'est pas important
+**Objectif.** Dissocier significativité statistique et ampleur de l'effet.
+
+**Manipulation.**
+
+1. Simulez trois groupes de moyennes 100, 100,5, 101 — des différences minimes — avec un écart-type de 15.
+2. Fixez de **petits** effectifs ($n = 10$) et lancez l'ANOVA classique : la valeur-$p$ est probablement non significative, et $\eta^2$ est minuscule.
+3. Portez maintenant les effectifs à $n = 500$ et régénérez.
+
+**Observez.** Avec de très grands échantillons, la même différence dérisoire devient « significative » — mais $\eta^2$ reste minuscule. La significativité a suivi la taille d'échantillon, pas l'importance de l'effet.
+
+**Question.** Un résultat significatif avec $\eta^2 = 0{,}005$ mérite-t-il d'être présenté comme une « découverte » ?
+:::
+
+## Planifier la puissance {#sec-puissance}
+
+Les tailles d'effet ne servent pas qu'à interpréter *après coup* : elles permettent de planifier *avant* de collecter. Le sous-onglet **Taille d'effet & Puissance** répond à la question inverse de l'analyse — non plus « quel effet ai-je détecté ? », mais « combien d'observations me faut-il pour détecter un effet donné ? ».
+
+La **puissance** d'un test est la probabilité de rejeter $H_0$ quand $H_1$ est vraie. Elle dépend de trois leviers : la taille d'effet visée (exprimée par le $f$ de Cohen), le seuil $\alpha$, et l'effectif $n$ par groupe. L'application trace les **courbes de puissance** — la puissance en fonction de $n$ — pour le $f$ que vous ciblez et pour le $f$ effectivement observé dans vos données, et indique le **$n$ recommandé** pour atteindre la puissance conventionnelle de 80 %.
+
+Le calcul repose sur la loi $F$ non centrale : sous $H_1$, la statistique $F$ suit une loi décentrée d'un paramètre $\lambda = f^2 N$ proportionnel à l'effet et à l'effectif total. Plus $\lambda$ est grand, plus la distribution se décale vers la droite, et plus il devient probable de dépasser le seuil critique.
+
+::: {.callout-tip}
+## À retenir
+Puissance, effet et effectif sont liés : à effet fixé, seul l'effectif permet de gagner en puissance. Planifier, c'est choisir $n$ *avant* l'étude pour se donner une chance raisonnable de détecter l'effet qui compte.
+:::
+
+::: {.callout-note}
+## Labo 3.6 — Combien de sujets ?
+**Objectif.** Déterminer l'effectif nécessaire pour atteindre 80 % de puissance.
+
+**Manipulation.**
+
+1. Ouvrez **ANOVA ▸ Taille d'effet & Puissance**. Réglez le curseur **f de Cohen cible** sur un effet moyen (0,25) et $\alpha = 0{,}05$.
+2. Lisez le **$n$ recommandé** et repérez, sur la courbe, où la puissance franchit 80 %.
+3. Abaissez le $f$ cible à 0,10 (petit effet), puis relevez-le à 0,40 (grand effet).
+
+**Observez.** Détecter un petit effet exige un effectif considérable ; un grand effet se détecte avec peu de sujets. La courbe du $f$ observé situe vos propres données par rapport à ce paysage.
+
+**Question.** Pourquoi est-il risqué de lancer une étude sans avoir estimé sa puissance au préalable ?
+:::
+
+## Quand les conditions faiblissent
+
+Le test $F$ classique repose sur trois conditions : l'indépendance des observations, la **normalité** des résidus, et l'**homogénéité des variances** entre groupes. L'indépendance relève du plan d'expérience ; les deux autres se vérifient dans l'onglet **Diagnostics** (@sec-diagnostics). Lorsqu'elles sont violées, le test classique peut devenir trop libéral — il rejette $H_0$ plus souvent que le seuil annoncé — ou perdre en puissance. L'application offre alors quatre familles de rechange, réunies dans les sous-onglets voisins.
+
+## Variances inégales : Welch et Brown-Forsythe
+
+Quand les groupes n'ont pas la même dispersion, le dénominateur du $F$ classique — un carré moyen intra *commun* — n'a plus de sens. Le **test de Welch** [@welch1951] contourne le problème en pondérant chaque groupe par sa propre précision $n_i / s_i^2$ et en ajustant les degrés de liberté. Il ne suppose pas l'égalité des variances et reste valide là où le test classique déraille. Le **test de Brown-Forsythe** [@brown1974] poursuit le même but par un ajustement différent du dénominateur. Tous deux conservent l'hypothèse de normalité ; ils corrigent l'hétérogénéité, pas la non-normalité.
+
+::: {.callout-note}
+## Labo 3.3 — Welch à la rescousse
+**Objectif.** Voir quand le test classique et le test de Welch divergent.
+
+**Manipulation.**
+
+1. Simulez trois groupes de moyennes égales (100, 100, 100) mais d'écarts-types très différents — par exemple un rapport voisin de 1:5 — avec des effectifs **inégaux**.
+2. Lancez **ANOVA classique**, puis **Test de Welch**, et comparez les valeurs-$p$.
+3. Régénérez plusieurs fois pour voir la tendance.
+
+**Observez.** Sous des variances franchement inégales combinées à des effectifs inégaux, le test classique rejette $H_0$ trop souvent alors qu'aucune moyenne ne diffère. Welch, lui, respecte mieux le seuil. Le @sec-experimenter le confirmera par simulation.
+
+**Question.** Pourquoi la combinaison « variances inégales *et* effectifs inégaux » est-elle la plus périlleuse pour le test classique ?
+:::
+
+## Non-normalité : Kruskal-Wallis et test de la médiane
+
+Lorsque les distributions s'écartent nettement de la normale — forte asymétrie, valeurs extrêmes —, on abandonne les moyennes pour les **rangs**. Le test de **Kruskal-Wallis** [@kruskal1952] classe toutes les observations, puis compare la somme des rangs de chaque groupe au moyen de la statistique
+
+$$
+H = \frac{12}{N(N+1)} \sum_{i=1}^{k} \frac{R_i^2}{n_i} - 3(N+1),
+$$
+
+qui suit approximativement une loi du khi-deux à $k-1$ degrés de liberté. Comme il ne s'appuie que sur l'ordre des valeurs, il est insensible aux valeurs aberrantes et ne suppose aucune forme particulière. Le **test de la médiane**, plus rustique encore, compare le nombre d'observations au-dessus et au-dessous de la médiane globale. Ces tests répondent à une question légèrement différente — « les distributions sont-elles décalées ? » plutôt que « les moyennes diffèrent-elles ? » —, nuance à garder en tête au moment d'interpréter.
+
+::: {.callout-note}
+## Labo 3.4 — Les rangs contre les outliers
+**Objectif.** Comparer la robustesse du test classique et de Kruskal-Wallis face à la non-normalité.
+
+**Manipulation.**
+
+1. Si l'application le permet, choisissez une distribution **asymétrique** ou **exponentielle** ; sinon, générez des données puis introduisez visuellement une valeur extrême via de forts écarts-types.
+2. Utilisez de **petits** effectifs et lancez **ANOVA classique**, **Kruskal-Wallis** et **Test de la médiane**.
+3. Régénérez plusieurs fois et comparez les décisions.
+
+**Observez.** Sur des données très asymétriques à faible effectif, le test classique et les tests de rangs peuvent diverger ; ces derniers ne se laissent pas entraîner par une valeur extrême.
+
+**Question.** Kruskal-Wallis teste-t-il exactement la même hypothèse que l'ANOVA ? Que compare-t-il, au juste ?
+:::
+
+## Sans hypothèse de loi : le bootstrap
+
+Le sous-onglet **ANOVA Bootstrap** propose une troisième voie : plutôt que de s'appuyer sur une loi théorique du $F$, il **rééchantillonne** les données pour construire empiriquement la distribution de la statistique sous des rééchantillonnages répétés. L'application offre trois variantes — bootstrap **non-paramétrique** (rééchantillonnage direct des observations), **paramétrique** (simulation à partir d'un modèle ajusté) et **résiduel** (rééchantillonnage des résidus) —, un nombre de rééchantillons réglable et un niveau de confiance ajustable. Le bootstrap ne suppose pas la normalité et fournit, en prime, des intervalles pour les quantités d'intérêt. Son coût est le temps de calcul.
+
+::: {.callout-note}
+## Labo 3.5 — Rééchantillonner plutôt que supposer
+**Objectif.** Confronter l'ANOVA bootstrap au test classique.
+
+**Manipulation.**
+
+1. Avec des données modérément non normales, ouvrez **ANOVA Bootstrap**, choisissez le bootstrap **non-paramétrique**, un nombre de rééchantillons élevé et lancez.
+2. Comparez la conclusion (et l'intervalle) à celle de l'ANOVA classique.
+3. Essayez les variantes **paramétrique** et **résiduelle** : les résultats se rejoignent-ils ?
+
+**Observez.** Quand les conditions du test classique tiennent à peu près, bootstrap et $F$ concordent. Le bootstrap prend l'avantage quand la loi théorique devient douteuse.
+
+**Question.** Qu'apporte concrètement un intervalle bootstrap que la seule valeur-$p$ du test classique ne donne pas ?
+:::
+
+## Transformer plutôt que renoncer
+
+Face à des variances inégales ou à une forte asymétrie, changer de test n'est pas la seule option : on peut parfois **transformer** la variable mesurée pour rétablir les conditions. Le menu **Transformation** — accessible en permanence dans le panneau latéral — applique en direct une fonction à la mesure : racine carrée, logarithme, carré, inverse, ou arc-sinus. Toutes les analyses se recalculent aussitôt, ce qui permet de comparer immédiatement les données brutes et transformées.
+
+Chaque transformation a son domaine. La **racine carrée** stabilise la variance de données de comptage, où la variance croît avec la moyenne. Le **logarithme** convient aux données fortement étirées vers la droite ou de nature multiplicative. L'**arc-sinus de la racine** s'appliquait classiquement aux proportions. L'idée commune : comprimer les grandes valeurs davantage que les petites, pour égaliser les dispersions et symétriser les distributions.
+
+Une transformation n'est toutefois pas anodine : elle modifie l'échelle, et donc l'interprétation. Une différence significative sur des données log-transformées parle de rapports, non d'écarts absolus. Transformer est un compromis, à peser contre le recours à un test robuste.
+
+::: {.callout-note}
+## Labo 3.7 — L'effet d'une transformation
+**Objectif.** Observer comment une transformation agit sur les distributions et sur le test.
+
+**Manipulation.**
+
+1. Simulez des données fortement asymétriques (loi exponentielle si l'option existe, ou de grands écarts-types). Notez, sous **Diagnostics**, l'état de la normalité et de l'homogénéité.
+2. Dans le panneau latéral, appliquez la transformation **Logarithme naturel** et observez le changement sur les histogrammes (@sec-decrire) et les diagnostics.
+3. Comparez le tableau d'ANOVA avant et après transformation.
+
+**Observez.** La transformation logarithmique resserre la queue de droite : les distributions se rapprochent de la normale et les variances s'égalisent. Le test gagne en validité.
+
+**Question.** Après une transformation logarithmique, formuleriez-vous la conclusion en termes d'écarts ou de rapports ?
+:::
+
+## Choisir sa route
+
+Quatre familles, une décision. La logique est simple et l'onglet **Diagnostics** l'automatise (@sec-diagnostics) : si normalité et homogénéité tiennent, l'**ANOVA classique** est la plus puissante ; si les variances sont inégales, **Welch** ; si la normalité est douteuse, **Kruskal-Wallis** ou le **bootstrap**. Le chapitre suivant suppose qu'un test omnibus a conclu à une différence, et cherche à savoir *où* elle se loge.

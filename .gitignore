@@ -1,0 +1,28 @@
+# R / données locales
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+.Renviron
+.env
+
+# Anciennes copies et documentation non liée au projet courant
+appBAK.R
+Docs/
+
+# Sorties et caches Quarto : les sources .qmd, images et bibliographies restent suivies
+manuel/Backup/
+manuel/_freeze/
+manuel/_quarto/
+manuel/.quarto/
+manuel/_book/
+manuel/_site/
+manuel/site_libs/
+manuel/*_files/
+manuel/*.html
+manuel/*.pdf
+
+# Fichiers temporaires
+*.log
+.DS_Store
+Thumbs.db

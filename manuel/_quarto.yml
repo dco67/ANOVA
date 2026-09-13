@@ -1,0 +1,58 @@
+project:
+  type: book
+  output-dir: _book
+
+lang: fr
+bibliography: references.bib
+
+book:
+  title: "L'analyse de variance"
+  subtitle: "Un laboratoire pour comprendre l'ANOVA à un facteur"
+  author: "Daniel Coulombe, Ph.D."
+  cover-image: images/cover.png
+  date: today
+  search: true
+  page-navigation: true
+  downloads: [pdf, epub]
+  chapters:
+    - index.qmd
+    - 01-introduction.qmd
+    - 02-decrire.qmd
+    - 03-anova.qmd
+    - 04-comparaisons.qmd
+    - 05-diagnostics.qmd
+    - 06-experimenter.qmd
+    - glossaire.qmd
+    - references.qmd
+
+execute:
+  freeze: auto
+  echo: false
+  warning: false
+
+crossref:
+  chapters: true
+
+format:
+  html:
+    theme: [cosmo, theme.scss]
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    fig-align: center
+  pdf:
+    documentclass: scrbook
+    pdf-engine: lualatex
+    papersize: letter
+    toc: true
+    number-sections: true
+    colorlinks: true
+    fig-align: center
+    include-in-header: header.tex
+    include-before-body: cover.tex
+    geometry:
+      - margin=1in
+  epub:
+    toc: true
+    number-sections: true
+    epub-cover-image: images/cover.png

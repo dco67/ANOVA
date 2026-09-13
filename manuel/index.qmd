@@ -1,0 +1,28 @@
+# Préface {.unnumbered}
+
+Ce manuel accompagne l'application **ANOVA** — un laboratoire interactif consacré à l'analyse de variance à un facteur. Il ne s'adresse pas au lecteur pressé qui cherche une formule à appliquer, mais à l'étudiant qui veut *comprendre* : pourquoi compare-t-on des variances pour conclure sur des moyennes ? Que se passe-t-il quand les conditions ne sont pas réunies ? Comment décide-t-on qu'une différence est réelle plutôt que due au hasard ?
+
+## Une pédagogie par la manipulation
+
+Chaque chapitre correspond à un onglet de l'application et propose des **laboratoires** : de courtes activités où l'on génère des données, on règle des paramètres, on observe un résultat, puis on en tire une leçon. L'idée directrice est simple — *on apprend l'ANOVA en la manipulant*, pas en la contemplant. Les encadrés marqués
+
+::: {.callout-note}
+## Labo
+signalent ces activités. Chacune indique quoi régler dans l'application, quoi observer, et une question à explorer.
+:::
+
+## L'application en bref
+
+L'application s'organise en cinq onglets, qui structurent aussi ce manuel :
+
+- **Description des données** — statistiques descriptives et visualisations, dont un graphique de la décomposition de la variance.
+- **ANOVA** — le test $F$ classique et ses variantes robustes (Welch, Brown-Forsythe, Kruskal-Wallis, test de la médiane, bootstrap).
+- **Comparaisons** — contrastes, tendances polynomiales et tests post-hoc.
+- **Diagnostics** — vérification de la normalité et de l'homogénéité des variances, avec une recommandation de test.
+- **Expérimentation** — un laboratoire de simulation Monte-Carlo pour découvrir le comportement des tests dans des conditions variées.
+
+Les données peuvent être **importées** ou **simulées**. Le mode simulé, omniprésent dans ce manuel, permet de fixer la vérité — les vraies moyennes, les vrais écarts-types — puis d'observer ce que les tests en retrouvent.
+
+## Comment lire ce manuel
+
+On peut lire les chapitres dans l'ordre, ou ouvrir directement celui qui correspond à l'onglet exploré. Chaque chapitre est autonome, mais les premiers posent le vocabulaire (variance inter et intra, ratio $F$, taille d'effet) que les suivants réutilisent. Gardez l'application ouverte à côté du texte : les laboratoires n'ont de sens que manipulés.

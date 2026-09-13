@@ -1,0 +1,29 @@
+/*-- scss:defaults --*/
+$primary:   #2c7fb8;
+$body-color: #2c3e50;
+
+/*-- scss:rules --*/
+
+// Bouton « Ouvrir l'application »
+.app-link {
+  display: inline-block;
+  padding: 6px 14px;
+  margin: 4px 0 14px 0;
+  border-radius: 6px;
+  background: #2c7fb8;
+  color: #ffffff !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+.app-link:hover { background: #21618c; }
+
+// Callouts « Labo » (on repose sur callout-note, recoloré côté labo)
+div.callout.callout-style-default.callout-note {
+  border-left-color: #16a085;
+}
+div.callout-note .callout-title {
+  background: #eafaf1;
+}
+
+// Tableaux plus aérés
+table { font-size: 0.95em; }

@@ -1,0 +1,92 @@
+# L'ANOVA et l'application {#sec-intro}
+
+## Comparer plusieurs moyennes
+
+Supposons trois méthodes pédagogiques, trois doses d'un médicament, ou trois sols de culture. On mesure un résultat dans chaque groupe et l'on se demande : *les moyennes diffèrent-elles vraiment, ou les écarts observés ne sont-ils que le fruit du hasard d'échantillonnage ?* Comparer deux groupes se fait avec un test $t$. Dès qu'il y en a trois ou plus, multiplier les tests $t$ deux à deux gonfle le risque de conclure à tort. L'**analyse de variance** (ANOVA), due à Fisher [@fisher1925], répond à la question d'un seul coup, pour l'ensemble des groupes.
+
+Le nom surprend : pourquoi parler de *variance* pour conclure sur des *moyennes* ? Parce que l'ANOVA compare deux sources de variation. Si les moyennes de groupe s'écartent nettement les unes des autres — bien plus que ne le ferait la dispersion interne à chaque groupe — c'est le signe d'un effet réel.
+
+## Le modèle et les hypothèses
+
+On note $y_{ij}$ la mesure de l'individu $j$ du groupe $i$, avec $i = 1, \dots, k$ groupes. Le modèle à un facteur s'écrit
+
+$$
+y_{ij} = \mu + \alpha_i + \varepsilon_{ij},
+$$
+
+où $\mu$ est la moyenne générale, $\alpha_i$ l'effet propre du groupe $i$, et $\varepsilon_{ij}$ l'erreur résiduelle, supposée suivre une loi normale de moyenne nulle et de variance $\sigma^2$ commune à tous les groupes. L'hypothèse nulle affirme l'absence d'effet :
+
+$$
+H_0 : \mu_1 = \mu_2 = \cdots = \mu_k,
+$$
+
+contre l'alternative qu'au moins une moyenne diffère des autres. Rejeter $H_0$ ne dit pas *lesquelles* diffèrent — c'est le rôle des comparaisons multiples (@sec-comparaisons).
+
+## Décomposer la variance
+
+Le cœur de l'ANOVA tient dans une identité. L'écart de chaque observation à la moyenne générale $\bar{y}$ se scinde en deux :
+
+$$
+\underbrace{(y_{ij} - \bar{y})}_{\text{total}} = \underbrace{(\bar{y}_i - \bar{y})}_{\text{inter}} + \underbrace{(y_{ij} - \bar{y}_i)}_{\text{intra}} .
+$$
+
+En élevant au carré et en sommant sur toutes les observations, les doubles produits s'annulent et l'on obtient la décomposition des sommes de carrés :
+
+$$
+SC_{\text{totale}} = SC_{\text{inter}} + SC_{\text{intra}} .
+$$
+
+La part **inter** mesure à quel point les moyennes de groupe s'éloignent de la moyenne générale : c'est le *signal*. La part **intra** mesure la dispersion à l'intérieur des groupes : c'est le *bruit*. En divisant chaque somme de carrés par ses degrés de liberté, on obtient les carrés moyens, dont le rapport définit la statistique de test :
+
+$$
+F = \frac{CM_{\text{inter}}}{CM_{\text{intra}}} = \frac{SC_{\text{inter}} / (k-1)}{SC_{\text{intra}} / (N-k)} .
+$$
+
+Sous $H_0$, ce rapport vaut environ 1 : signal et bruit sont comparables. Plus $F$ est grand, plus le signal domine le bruit, et plus il devient improbable que les moyennes soient toutes égales. La valeur-$p$ quantifie cette improbabilité.
+
+::: {.callout-tip}
+## À retenir
+L'ANOVA ne « compare pas des variances » pour elles-mêmes : elle met en rapport la variance *entre* les groupes et la variance *au sein* des groupes. Un $F$ élevé signifie « les groupes diffèrent davantage entre eux qu'ils ne varient à l'intérieur ».
+:::
+
+## L'application, onglet par onglet
+
+L'application matérialise cette logique. Les données proviennent de deux sources, choisies en tête de l'onglet **Introduction** : on peut **importer** un fichier, ou **simuler** des données en fixant soi-même le nombre de groupes, les moyennes et les écarts-types. Le mode simulé est l'outil pédagogique central : il permet de connaître la vérité, puis de vérifier ce que les tests en retrouvent.
+
+Une fois les données en place, les onglets se parcourent dans l'ordre du raisonnement : **Description des données** pour explorer, **ANOVA** pour tester, **Comparaisons** pour préciser, **Diagnostics** pour vérifier les conditions, **Expérimentation** pour éprouver les tests par simulation.
+
+::: {.callout-note}
+## Labo 1.1 — Première ANOVA
+**Objectif.** Générer des données et lire un premier tableau d'ANOVA.
+
+**Manipulation.**
+
+1. Dans l'onglet **Introduction**, choisissez la source **Simuler**. Ouvrez l'accordéon **Configuration des moyennes**.
+2. Fixez **3 groupes**, des moyennes nettement distinctes (par exemple 90, 100, 110) et un écart-type commun modéré (15). Cliquez **Générer**.
+3. Ouvrez **ANOVA ▸ ANOVA classique** et lisez le tableau : sommes de carrés, degrés de liberté, valeur de $F$, valeur-$p$.
+
+**Observez.** Le carré moyen inter est bien plus grand que le carré moyen intra, d'où un $F$ élevé et une valeur-$p$ minuscule. Régénérez les données avec des moyennes toutes égales (100, 100, 100) : le $F$ retombe autour de 1.
+
+**Question.** Que représente concrètement le carré moyen intra, et pourquoi sert-il de référence au signal ?
+:::
+
+## Voir le signal et le bruit
+
+Les formules deviennent tangibles dès qu'on les dessine. L'onglet **Description des données ▸ Visualisation** propose un type de graphique **Décomposition (inter/intra)** : chaque point y est relié à la moyenne de son groupe (variation intra, en gris) et chaque moyenne de groupe à la moyenne générale (variation inter, en rouge). Le sous-titre affiche les sommes de carrés, le $F$ et le $\eta^2$.
+
+::: {.callout-note}
+## Labo 1.2 — Signal contre bruit
+**Objectif.** Relier visuellement la décomposition de la variance à la statistique $F$.
+
+**Manipulation.**
+
+1. Avec vos données à trois groupes bien séparés, ouvrez **Description des données ▸ Visualisation** et choisissez **Décomposition (inter/intra)**.
+2. Repérez les segments rouges (inter) et gris (intra), la moyenne générale en pointillé, et lisez le sous-titre.
+3. Régénérez avec des écarts-types plus grands (par exemple 30) sans changer les moyennes.
+
+**Observez.** En augmentant l'écart-type, les segments gris s'allongent : le bruit croît, le $F$ chute, alors même que les moyennes de groupe n'ont pas bougé. Le signal n'a de valeur que rapporté au bruit.
+
+**Question.** Deux configurations peuvent-elles avoir les mêmes moyennes de groupe mais des $F$ très différents ? Pourquoi ?
+:::
+
+Ce vocabulaire — inter, intra, ratio $F$, $\eta^2$ — irrigue tout le manuel. Le chapitre suivant apprend à décrire les données avant de les tester.

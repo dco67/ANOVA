@@ -1,0 +1,93 @@
+# Décrire les données {#sec-decrire}
+
+Avant de tester quoi que ce soit, on regarde. Un tableau d'ANOVA se résume à un $F$ et une valeur-$p$ ; il ne dit rien de la forme des données, de leur dispersion, ni des valeurs aberrantes qui pourraient fausser la conclusion. L'onglet **Description des données** sert précisément à cette exploration préalable — celle qui, souvent, anticipe le résultat du test et surtout en éclaire l'interprétation.
+
+## Les statistiques descriptives
+
+Le sous-onglet **Statistiques descriptives** produit, pour chaque groupe, sa moyenne, son écart-type, son effectif et ses valeurs extrêmes. Ces quatre nombres suffisent déjà à orienter l'analyse.
+
+La **moyenne** de chaque groupe, $\bar{y}_i$, est la quantité que l'ANOVA compare. L'**écart-type**,
+
+$$
+s_i = \sqrt{\frac{1}{n_i - 1} \sum_{j=1}^{n_i} (y_{ij} - \bar{y}_i)^2},
+$$
+
+mesure la dispersion interne : c'est la matière première du « bruit » intra-groupe. L'**effectif** $n_i$ conditionne la précision : un même écart de moyennes se détecte d'autant mieux que les groupes sont grands. Enfin, le **minimum** et le **maximum** signalent d'un coup d'œil une valeur extrême suspecte.
+
+Deux lectures comptent particulièrement. D'abord, les moyennes se ressemblent-elles ou s'écartent-elles nettement ? Ensuite — question trop souvent négligée — les écarts-types sont-ils comparables d'un groupe à l'autre ? L'ANOVA classique suppose leur égalité ; un tableau où un groupe est trois fois plus dispersé qu'un autre annonce déjà qu'il faudra songer au test de Welch (@sec-anova).
+
+::: {.callout-note}
+## Labo 2.1 — Lire un tableau descriptif
+**Objectif.** Extraire d'un simple tableau les deux informations qui décident de la suite : l'écart entre moyennes et l'égalité des dispersions.
+
+**Manipulation.**
+
+1. Simulez **3 groupes** de moyennes 100, 105, 110, avec un écart-type commun de 15, puis **Générez**.
+2. Ouvrez **Description des données ▸ Statistiques descriptives** et relevez moyennes et écarts-types.
+3. Régénérez en donnant au troisième groupe un écart-type beaucoup plus grand (dans **Configuration**, passez à des écarts-types variables si l'option est offerte, sinon augmentez la dispersion générale).
+
+**Observez.** Les moyennes restent proches, mais l'un des groupes domine la dispersion. C'est le signe avant-coureur d'une hétérogénéité des variances.
+
+**Question.** Entre deux groupes de même moyenne mais d'écarts-types très différents, lequel contribue le plus au « bruit » de l'ANOVA ?
+:::
+
+## Voir la dispersion : les boîtes
+
+Le sous-onglet **Visualisation** offre plusieurs représentations, activées par le menu **Type de graphique**. Les **boîtes de dispersion** (boxplots) résument chaque groupe par sa médiane, ses quartiles et l'étendue de ses valeurs. Elles révèlent d'un coup trois choses que la moyenne seule cache : l'**asymétrie** (une boîte décentrée), la **dispersion** (une boîte large) et les **valeurs aberrantes** (points isolés au-delà des moustaches). Les options **Afficher les points** et **Afficher les moyennes** superposent respectivement les observations individuelles et la moyenne de chaque groupe, utile pour confronter médiane et moyenne.
+
+::: {.callout-note}
+## Labo 2.2 — La boîte révèle ce que la moyenne cache
+**Objectif.** Distinguer visuellement moyenne, médiane, dispersion et valeurs extrêmes.
+
+**Manipulation.**
+
+1. Avec trois groupes bien séparés, choisissez **Boxplots** et cochez **Afficher les points** puis **Afficher les moyennes**.
+2. Comparez, dans chaque groupe, la position de la moyenne (le repère ajouté) et de la médiane (le trait de la boîte).
+3. Régénérez plusieurs fois : surveillez l'apparition de points au-delà des moustaches.
+
+**Observez.** Quand la distribution est symétrique, moyenne et médiane coïncident presque ; une valeur extrême écarte la moyenne sans déplacer la médiane. Les boîtes montrent aussi si les dispersions sont comparables.
+
+**Question.** Pourquoi une valeur aberrante déplace-t-elle la moyenne bien plus que la médiane ?
+:::
+
+## Voir la forme : histogrammes et densités
+
+Pour juger de la **forme** des distributions — condition clé de l'ANOVA classique — les **histogrammes** et les courbes de **densité** sont plus parlants que les boîtes. Le menu **Mode d'affichage** propose de les empiler, de les mettre côte à côte, de les superposer, ou de les répartir en **facettes séparées**. Les facettes, un panneau par groupe, sont idéales pour comparer les formes sans que les groupes se masquent. Le nombre de classes de l'histogramme s'ajuste au besoin.
+
+C'est ici que l'on repère une asymétrie marquée, une distribution en cloche bien nette, ou au contraire deux bosses. Ces observations préparent le travail de l'onglet **Diagnostics** (@sec-diagnostics) et le choix entre l'ANOVA classique et une approche non paramétrique.
+
+::: {.callout-note}
+## Labo 2.3 — La forme des distributions
+**Objectif.** Reconnaître visuellement une distribution normale d'une distribution asymétrique, avant de le tester formellement.
+
+**Manipulation.**
+
+1. Choisissez **Histogrammes** ou **Densité**, puis le mode **Facettes séparées** pour isoler chaque groupe.
+2. Avec des données simulées normales, observez la forme en cloche.
+3. Si l'application permet de choisir une distribution non normale (asymétrique, exponentielle), régénérez et comparez.
+
+**Observez.** Une distribution normale est symétrique et unimodale ; une distribution exponentielle est fortement étirée vers la droite. L'œil détecte ces écarts avant tout test.
+
+**Question.** Sur de petits échantillons, peut-on vraiment juger de la normalité à l'œil ? Que risque-t-on à surinterpréter la forme d'un histogramme à faible effectif ?
+:::
+
+## Voir l'incertitude : les barres d'erreur
+
+Le type **Barres d'erreur** représente chaque moyenne de groupe entourée d'un intervalle traduisant son incertitude. Deux moyennes dont les intervalles ne se chevauchent pas sont probablement distinctes ; un fort chevauchement invite à la prudence. C'est une intuition visuelle du test à venir : l'ANOVA formalise, à l'échelle de tous les groupes, ce que l'œil pressent en regardant se chevaucher — ou non — ces barres.
+
+::: {.callout-note}
+## Labo 2.4 — Quand les intervalles se chevauchent
+**Objectif.** Anticiper la conclusion du test à partir du chevauchement des intervalles de confiance des moyennes.
+
+**Manipulation.**
+
+1. Choisissez **Barres d'erreur**. Simulez trois groupes de moyennes très proches (100, 101, 102) avec un écart-type de 15 et de petits effectifs.
+2. Notez le chevauchement des intervalles, puis lancez **ANOVA ▸ ANOVA classique**.
+3. Augmentez fortement les effectifs et régénérez.
+
+**Observez.** À petits effectifs, les intervalles se chevauchent largement et le test ne conclut pas. En augmentant $n$, les intervalles se resserrent, cessent de se chevaucher, et la même différence devient significative.
+
+**Question.** Une différence « significative » est-elle nécessairement importante ? Que faut-il regarder, en plus de la valeur-$p$, pour en juger ? (On y revient au chapitre suivant, avec les tailles d'effet.)
+:::
+
+Décrire n'est pas tester, mais décrire oriente le test. Muni de ces lectures — écart des moyennes, égalité des dispersions, forme des distributions, chevauchement des intervalles —, on aborde l'ANOVA proprement dite.

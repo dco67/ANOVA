@@ -1,0 +1,6 @@
+# Références {.unnumbered}
+
+L'analyse de variance remonte aux travaux de Fisher [@fisher1925]. Ses variantes robustes — le test de Welch [@welch1951], celui de Brown-Forsythe [@brown1974] et le test de rangs de Kruskal-Wallis [@kruskal1952] — répondent aux violations de ses conditions. Les comparaisons multiples s'appuient sur Tukey [@tukey1949] et, pour les variances inégales, sur Games-Howell [@gameshowell1976]. Les tailles d'effet suivent Cohen [@cohen1988]; les tests de conditions, Levene [@levene1960], Bartlett [@bartlett1937] et Shapiro-Wilk [@shapiro1965].
+
+::: {#refs}
+:::
