@@ -1,2 +1,20 @@
 \usepackage{graphicx}
 \usepackage{eso-pic}
+% Numéros sans point final : « Figure 1.1 : » plutôt que « Figure 1.1.: »
+\KOMAoptions{numbers=noenddot}
+% Caractères Unicode absents de la police Latin Modern (hors formules) :
+% on les dessine avec LaTeX, ce qui ne dépend d'aucune police installée.
+\usepackage{newunicodechar}
+\newunicodechar{▸}{\ensuremath{\blacktriangleright}}
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{ᵉ}{\textsuperscript{e}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{η}{\ensuremath{\eta}}
+\newunicodechar{ω}{\ensuremath{\omega}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{λ}{\ensuremath{\lambda}}
+\newunicodechar{μ}{\ensuremath{\mu}}
+\newunicodechar{ψ}{\ensuremath{\psi}}
+\newunicodechar{χ}{\ensuremath{\chi}}
+\newunicodechar{≈}{\ensuremath{\approx}}

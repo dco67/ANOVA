@@ -1,0 +1,118 @@
+# Solutionnaire des laboratoires {#sec-solutionnaire}
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+source("_common.R")
+pl_a <- anova_1f(plantes$poids, plantes$groupe)
+pl_e <- tailles_effet(pl_a)
+pl_ic <- ic_eta2(pl_a$F, pl_a$dl1, pl_a$dl2, 0.90)
+pl_s <- stats_groupes(plantes$poids, plantes$groupe)
+pl_c <- tester_contrastes(plantes$poids, plantes$groupe, cbind(c(-2, 1, 1), c(0, -1, 1)))$res
+pl_tk <- comparaisons_multiples(plantes$poids, plantes$groupe, "tukey")
+pl_bf <- car::leveneTest(poids ~ groupe, data = plantes, center = median)[1, 3]
+```
+
+Ce solutionnaire répond aux questions qui terminent chaque laboratoire, puis à l'exercice final du @sec-exemple. Les réponses aux quiz se trouvent dans les chapitres eux-mêmes, repliées sous chaque question. Quand un laboratoire fait intervenir le hasard (graine vide), vos chiffres différeront un peu des ordres de grandeur cités : c'est normal.
+
+## Chapitre 1 — L'ANOVA et l'application
+
+**Labo 1.1.** Le carré moyen intra est la moyenne des variances des groupes (pondérée par leurs degrés de liberté) : il mesure à quel point les individus d'un même groupe diffèrent entre eux, c'est-à-dire le bruit que le hasard produit même sans aucun effet. Il estime $\sigma^2$ que $H_0$ soit vraie ou non. Le carré moyen inter estime la même quantité si $H_0$ est vraie, et davantage sinon. Le CM intra sert donc d'étalon : on juge les écarts entre moyennes à l'aune de ce que le hasard seul produirait.
+
+**Labo 1.2.** Oui : avec $n_i$, $\bar{y}_i$ et $s_i$, on calcule la moyenne générale $\bar{y} = \sum n_i \bar{y}_i / N$, puis $SC_{\text{inter}} = \sum n_i(\bar{y}_i - \bar{y})^2$ et $SC_{\text{intra}} = \sum (n_i - 1)s_i^2$, et tout le tableau en découle. En revanche, on ne peut pas vérifier la normalité (il faudrait les données ou au moins leur distribution), ni repérer des valeurs extrêmes, ni examiner les résidus dans l'ordre de collecte. On peut tout de même juger l'homogénéité des variances grossièrement, à partir du rapport des variances extrêmes.
+
+**Labo 1.3.** Oui. $F$ dépend des moyennes, mais aussi de la dispersion à l'intérieur des groupes et des effectifs. Avec les mêmes moyennes, un échantillon très dispersé a un $CM_{\text{intra}}$ élevé, donc un $F$ faible; un échantillon peu dispersé, un $F$ élevé. De même, des groupes plus grands donnent plus de poids aux mêmes écarts de moyennes dans la $SC_{\text{inter}}$.
+
+## Chapitre 2 — Décrire les données
+
+**Labo 2.1.** Le groupe le plus dispersé. Sa contribution à la $SC_{\text{intra}}$ vaut $(n_i - 1)\,s_i^2$ : à effectif égal, un écart-type quatre fois plus grand donne une contribution seize fois plus grande. La moyenne du groupe n'intervient pas dans la $SC_{\text{intra}}$.
+
+**Labo 2.2.** La moyenne additionne toutes les valeurs : une valeur très éloignée tire la somme, donc la moyenne, d'autant plus qu'elle est loin. La médiane ne dépend que de l'ordre des valeurs : qu'une valeur extrême vaille 150 ou 500, elle reste « la plus grande », et la médiane ne bouge pas.
+
+**Labo 2.3.** Guère. Avec huit observations, l'allure d'un histogramme change beaucoup d'un échantillon à l'autre, même quand la population est parfaitement normale. On risque de « voir » une asymétrie qui n'existe pas et de changer de test sans raison, ou, à l'inverse, de ne pas voir une asymétrie réelle. Seuls les écarts flagrants (valeur très isolée, forte asymétrie répétée dans tous les groupes) méritent attention sur de si petits groupes.
+
+**Labo 2.4.** Pas nécessairement. Une différence de 4 points sur un écart-type de 15 représente 0,27 écart-type entre les groupes extrêmes; le facteur explique environ 1 % de la variabilité. Avec 500 observations par groupe, le test détecte des écarts très petits. Il faut regarder la **taille d'effet** (et son intervalle de confiance) et juger, dans le domaine étudié, si un tel écart a une importance pratique.
+
+## Chapitre 3 — Le test $F$ : décision, ampleur et puissance
+
+**Labo 3.1.** Le numérateur de $\omega^2$ retire de la $SC_{\text{inter}}$ ce que le hasard y mettrait en moyenne, $(k-1)\,CM_{\text{intra}}$. Quand l'effet est nul ou très faible, la $SC_{\text{inter}}$ observée peut être inférieure à cette quantité, et la différence devient négative. Ce n'est pas une proportion négative, mais une estimation imprécise d'une proportion proche de 0. L'application affiche alors 0.
+
+**Labo 3.2.** Non. Un $\eta^2$ de 0,01 signifie que le facteur explique 1 % de la variabilité : un petit effet, que le grand échantillon a permis de détecter. Le compte rendu doit donner la taille d'effet, son intervalle de confiance, les moyennes et une discussion de l'importance pratique de l'écart.
+
+**Labo 3.3.** Sur l'effet : les données sont compatibles aussi bien avec une absence d'effet (borne inférieure 0) qu'avec un effet très grand (31 % de la variabilité). On ne peut donc conclure ni à un effet, ni à son absence. Sur l'étude : elle est trop petite pour estimer l'effet avec une précision utile; son résultat non significatif reflète surtout ce manque de précision.
+
+**Labo 3.4.** Sans calcul de puissance, on risque de lancer une étude qui n'a presque aucune chance de détecter l'effet visé : les ressources sont gaspillées et le résultat, ininterprétable. Avec une puissance de 30 %, l'étude manque un effet réel sept fois sur dix : une ANOVA non significative ne dit alors à peu près rien. On ne peut pas conclure à l'absence d'effet; l'intervalle de confiance de $\eta^2$ montre quels effets restent plausibles.
+
+## Chapitre 4 — Quand les conditions faiblissent
+
+**Labo 4.1.** Parce que le $CM_{\text{intra}}$ pondère chaque variance par l'effectif de son groupe. Si le groupe le plus dispersé est le plus petit, sa variance pèse peu : le bruit est sous-estimé, $F$ est gonflé et le test rejette $H_0$ trop souvent. Avec des effectifs égaux, ce déséquilibre de pondération disparaît en grande partie; avec des variances égales, il n'a pas d'effet. C'est la combinaison des deux qui fausse le test.
+
+**Labo 4.2.** Non. L'ANOVA teste l'égalité des moyennes; Kruskal-Wallis teste l'égalité des distributions, à travers les rangs moyens : il détecte la tendance d'un groupe à prendre des valeurs plus élevées ou plus faibles que les autres. Si les distributions ont la même forme et ne diffèrent que par leur position, il compare en pratique les médianes.
+
+**Labo 4.3.** Non. Le bootstrap remplace la loi de référence (la loi de Fisher) par une loi reconstruite à partir des données, mais il calcule toujours le même $F$, fondé sur des moyennes : la valeur extrême continue de gonfler la moyenne et la variance de son groupe, donc de brouiller le $F$ observé. Kruskal-Wallis s'en sort mieux parce qu'il change la statistique elle-même : sur les rangs, la valeur extrême devient simplement le plus grand rang.
+
+**Labo 4.4.** En termes de rapports. Une différence entre deux moyennes de $\ln(Y)$ correspond, sur l'échelle d'origine, à un rapport de moyennes géométriques : par exemple, une différence de 0,4 signifie qu'un groupe a des valeurs environ $e^{0,4} \approx 1{,}5$ fois plus grandes que l'autre.
+
+## Chapitre 5 — Comparaisons multiples et contrastes
+
+**Labo 5.1.** Parce que les occasions de se tromper s'accumulent. Chaque test a 5 % de risque de déclarer une fausse différence; pour qu'aucune erreur ne survienne, il faut que les dix tests « tombent juste ». Si les tests étaient indépendants, la probabilité qu'aucun ne se trompe serait $0{,}95^{10} \approx 0{,}60$, d'où un risque global d'environ 40 %. Les tests par paires étant corrélés, le risque réel est un peu plus faible (environ 28 % avec des groupes de 10), mais bien supérieur à 5 %.
+
+**Labo 5.2.** Parce qu'il dit à la fois *si* la différence est établie (l'intervalle exclut-il 0 ?) et *quelles valeurs* restent plausibles pour sa taille. Un résultat non significatif avec un intervalle étroit autour de 0 suggère une différence faible; avec un intervalle large, il signale surtout un manque de précision. La seule mention « non significatif » confond ces deux situations.
+
+**Labo 5.3.** Games-Howell (ou Tamhane T2, Dunnett T3). Le test de Welch a été choisi parce que les variances diffèrent; Tukey utilise une variance commune, la même pour toutes les paires, ce qui reviendrait à réintroduire l'hypothèse qu'on vient d'abandonner. Games-Howell calcule l'erreur type et les degrés de liberté propres à chaque paire, comme le test de Welch.
+
+**Labo 5.4.** Parce qu'elle ne paie pas le prix d'un balayage. Un post hoc corrige pour toutes les paires possibles, ce qui élargit chaque intervalle. Un ou deux contrastes fixés d'avance demandent peu ou pas de correction. De plus, un contraste comme $(-2, 1, 1)$ combine plusieurs groupes : il utilise davantage d'observations que chaque paire, donc il est estimé plus précisément.
+
+**Labo 5.5.** Avec des moyennes en cloche, la moyenne monte puis redescend : la pente d'ensemble (composante linéaire) est nulle, mais la courbure (composante quadratique) est forte. L'ANOVA globale détecte tout écart entre moyennes, quelle qu'en soit la forme; le test de la seule tendance linéaire ne voit que la pente. Les deux répondent à des questions différentes.
+
+## Chapitre 6 — Vérifier les conditions
+
+**Labo 6.1.** Non. Avec 8 observations, le test de Shapiro-Wilk a très peu de puissance : il laisse passer des écarts importants à la normalité. On peut seulement affirmer que les données ne permettent pas de détecter un écart, ce qui est très différent de « la population est normale ». Le diagramme quantile-quantile et la connaissance de la variable mesurée complètent le jugement.
+
+**Labo 6.2.** Parce que le test de Bartlett suppose la normalité : une asymétrie ou des valeurs extrêmes gonflent sa statistique, et il signale des variances inégales alors que le problème est la forme des distributions. Brown-Forsythe (écarts à la médiane) et Fligner-Killeen (rangs) résistent à ces écarts : ils répondent à la seule question des variances.
+
+**Labo 6.3.** Par exemple : des mesures prises par un appareil qui se dérègle peu à peu au cours de la journée; des participants testés à la suite par un expérimentateur qui se fatigue; des questionnaires remplis en fin de session par des répondants lassés; des élèves évalués dans l'ordre de la liste de classe, où les voisins se sont entraidés. Dans chaque cas, des observations voisines dans le temps se ressemblent davantage.
+
+**Labo 6.4.** Par exemple : avec de grands groupes (30 observations ou plus, effectifs égaux), un Shapiro-Wilk significatif pour un écart léger, visible comme anodin sur le diagramme quantile-quantile, ne justifie pas d'abandonner l'ANOVA; ou, comme au @sec-exemple, quand la nature des données (des comptages) suggère plutôt une transformation que le test non paramétrique proposé. On s'appuie alors sur les graphiques, la taille des groupes et la nature de la mesure.
+
+## Chapitre 7 — Expérimenter
+
+**Labo 7.1.** Parce que la valeur critique est définie par la loi de $F$ quand $H_0$ est vraie : c'est la valeur que $F$ ne dépasse que dans une proportion $\alpha$ des échantillons **en l'absence d'effet**. Elle ne dépend que des degrés de liberté et de $\alpha$. La puissance, elle, mesure la part de la loi **sous l'effet simulé** qui dépasse cette valeur; plus l'effet (ou l'effectif) est grand, plus cette loi est décalée vers la droite.
+
+**Labo 7.2.** Le test « découvrirait » un effet inexistant dans 12 % des études où il n'y en a aucun, plus du double du risque annoncé. Les résultats significatifs obtenus avec ce test seraient beaucoup moins fiables qu'on ne le croit, et la littérature s'emplirait de faux positifs.
+
+**Labo 7.3.** Entre 30 et 50 observations par groupe dans la simulation; le calcul exact donne 46 par groupe avec $f = 0{,}27$ dans l'onglet **Taille d'effet et puissance** (3 groupes, $\alpha = 0{,}05$).
+
+**Labo 7.4.** Il faut un effet d'environ $d = 1$ (soit $f \approx 0{,}41$) pour atteindre 80 % de puissance avec 20 observations par groupe : seuls les grands effets sont détectés de façon fiable. Pour $d = 0{,}3$ ($f \approx 0{,}12$), la puissance avec 20 par groupe n'est que d'environ 12 %; il faudrait environ 216 observations par groupe pour atteindre 80 %. On peut proposer d'augmenter fortement l'effectif, de réduire le bruit (mesure plus fiable, population plus homogène) ou de présenter l'étude comme exploratoire.
+
+**Labo 7.5.** Non, pas forcément : 2 points sur un écart-type de 15 représentent 0,13 écart-type, un effet négligeable selon les repères usuels. Il faut ajouter la taille d'effet (avec son intervalle de confiance) et un jugement sur ce qui compte dans le domaine.
+
+**Labo 7.6.** Un manque de puissance fait manquer des effets réels : c'est regrettable, mais la conclusion « aucun effet détecté » reste honnête. Un test libéral, lui, produit des conclusions positives fausses, présentées comme des découvertes, que d'autres chercheurs reprendront et chercheront à reproduire en vain. Il trompe activement.
+
+**Labo 7.7.** Par exemple : avec des distributions approximativement normales ou à queues légères, l'ANOVA (la plus puissante); avec une asymétrie marquée ou des queues lourdes, Kruskal-Wallis, qui contrôle aussi bien l'erreur de type I et gagne beaucoup en puissance. Dans les deux cas, la règle se fonde sur la forme observée dans les données ou connue pour ce type de mesure, et se décide avant le test.
+
+**Labo 7.8.** Parce qu'une valeur extrême peut être parfaitement légitime : la supprimer sans raison biaise les données vers ce qu'on attendait et fausse le risque d'erreur. Un test robuste garde toutes les observations tout en limitant leur influence. On ne supprime une valeur que si l'on établit qu'il s'agit d'une erreur (saisie, mesure), et on le signale.
+
+**Labo 7.9.** Parce que la précision d'une comparaison dépend surtout du plus petit groupe : une moyenne estimée sur 5 observations est très imprécise, et l'erreur type d'une différence, $\sqrt{CM_{\text{intra}}(1/n_i + 1/n_j)}$, est dominée par le plus petit $n$. À effectif total fixé, répartir également les observations minimise ces erreurs types. Un plan équilibré est aussi le plus robuste à l'inégalité des variances.
+
+## Chapitre 8 — Exercice 8.1 : les plantes
+
+**1. Décrire.** Les poids moyens sont de `r fr(pl_s$moy[1])` g (témoin), `r fr(pl_s$moy[2])` g (traitement 1) et `r fr(pl_s$moy[3])` g (traitement 2), avec des écarts-types de `r fr(pl_s$et[1])`, `r fr(pl_s$et[2])` et `r fr(pl_s$et[3])`. Le traitement 1 semble un peu en dessous du témoin, le traitement 2 un peu au-dessus.
+
+**2. Conditions.** La normalité est plausible dans chaque groupe (Shapiro-Wilk : $p > 0{,}45$) et sur les résidus. Le rapport des variances extrêmes vaut `r fr(max(pl_s$var) / min(pl_s$var), 1)`, un peu au-dessus de la règle pratique de 3, mais les effectifs sont égaux et le test de Brown-Forsythe ne rejette pas l'égalité des variances ($p = `r fr(pl_bf, 2)`$). L'ANOVA classique convient; le test de Welch, en vérification, donne la même conclusion ($p = 0{,}017$).
+
+**3. Test global.** $F(2, 27) = `r fr(pl_a$F)`$, $p = `r fr(pl_a$p, 3)`$, $\eta^2 = `r fr(pl_e$eta2, 2)`$, IC à 90 % [`r fr(pl_ic[1], 2)` ; `r fr(pl_ic[2], 2)`], $\omega^2 = `r fr(pl_e$omega2, 2)`$. Les groupes diffèrent; l'effet est grand, mais estimé avec peu de précision (l'intervalle va d'un effet minime à un effet très grand).
+
+**4. Contrastes planifiés.** Les groupes sont rangés dans l'ordre témoin, traitement 1, traitement 2. La première question (les traitements contre le témoin) se traduit par $(-2, 1, 1)$; la seconde (traitement 2 contre traitement 1), par $(0, -1, 1)$. Ils sont orthogonaux : $(-2)(0) + (1)(-1) + (1)(1) = 0$, et les effectifs sont égaux. Résultats :
+
+- témoin contre traitements : $\hat\psi = `r fr(pl_c$psi[1], 3)`$, $t(27) = `r fr(pl_c$t[1])`$, $p = `r fr(pl_c$p[1], 2)`$ : les traitements, pris ensemble, ne font pas mieux que le témoin;
+- traitement 2 contre traitement 1 : $\hat\psi = `r fr(pl_c$psi[2], 3)`$ g, IC à 95 % [`r fr(pl_c$lo[2])` ; `r fr(pl_c$hi[2])`], $t(27) = `r fr(pl_c$t[2])`$, $p = `r fr(pl_c$p[2], 3)`$ : le traitement 2 donne des plants plus lourds que le traitement 1.
+
+Comme ils sont orthogonaux, leurs sommes des carrés s'additionnent pour redonner la $SC_{\text{inter}}$ : presque toute la différence entre groupes tient à l'écart entre les deux traitements, qui vont en sens opposés par rapport au témoin.
+
+**5. Tukey.** Seule la paire traitement 2 − traitement 1 est significative (différence de `r fr(pl_tk$diff[3], 3)` g, $p = `r fr(pl_tk$p[3], 3)`$); aucun traitement ne diffère significativement du témoin. Tukey confirme le second contraste, avec une valeur $p$ plus élevée : il paie la protection de trois comparaisons, alors que le contraste planifié n'en paie aucune.
+
+**6. Compte rendu.**
+
+> Le poids sec moyen des plants était de `r fr(pl_s$moy[1])` g dans le groupe témoin, de `r fr(pl_s$moy[2])` g avec le traitement 1 et de `r fr(pl_s$moy[3])` g avec le traitement 2 ($n = 10$ par groupe). Une ANOVA à un facteur indique que les groupes diffèrent, $F(2, 27) = `r fr(pl_a$F)`$, $p = `r fr(pl_a$p, 3)`$, $\eta^2 = `r fr(pl_e$eta2, 2)`$, IC à 90 % [`r fr(pl_ic[1], 2)` ; `r fr(pl_ic[2], 2)`]. Deux contrastes planifiés et orthogonaux montrent que les traitements, pris ensemble, ne diffèrent pas du témoin ($t(27) = `r fr(pl_c$t[1])`$, $p = `r fr(pl_c$p[1], 2)`$), mais que le traitement 2 produit des plants plus lourds que le traitement 1, de `r fr(pl_c$psi[2], 2)` g en moyenne (IC à 95 % [`r fr(pl_c$lo[2])` ; `r fr(pl_c$hi[2])`], $t(27) = `r fr(pl_c$t[2])`$, $p = `r fr(pl_c$p[2], 3)`$).

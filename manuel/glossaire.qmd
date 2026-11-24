@@ -1,102 +1,203 @@
----
-title: "Glossaire : du manuel à l'écran"
----
-
 # Glossaire : du manuel à l'écran {#sec-glossaire .unnumbered}
 
-Ce glossaire relie les **termes et symboles du manuel** à ce que vous voyez **à l'écran** dans l'application **ANOVA**. Chaque fois qu'un mot du texte semble différer d'un libellé de l'application, cherchez-le ici. Gardez cette page à portée de main pendant vos laboratoires.
+Ce glossaire relie les **termes et symboles du manuel** à ce que vous voyez **à l'écran** dans l'application **ANOVA**. Chaque fois qu'un mot du texte semble différer d'un libellé de l'application, cherchez-le ici. La dernière section, **Lexique**, définit brièvement les termes techniques par ordre alphabétique.
 
-::: {.callout-note}
-Le manuel emploie les **sigles français** usuels : **SC** (somme de carrés), **ddl** (degrés de liberté) et **CM** (carré moyen). Dans les formules, les sources se notent en toutes lettres : $SC_{\text{inter}}$, $SC_{\text{intra}}$, $SC_{\text{totale}}$, $CM_{\text{inter}}$, $CM_{\text{intra}}$.
+::: {.callout-note title="Sigles"}
+Le manuel et l'application emploient les sigles français usuels : **SC** (somme des carrés), **dl** (degrés de liberté) et **CM** (carré moyen). Dans les formules, les sources s'écrivent en toutes lettres : $SC_{\text{inter}}$, $SC_{\text{intra}}$, $SC_{\text{totale}}$, $CM_{\text{inter}}$, $CM_{\text{intra}}$.
 :::
 
-## Le tableau d'ANOVA
+## Les données
 
-À l'écran : onglet **ANOVA → ANOVA classique**.
+À l'écran : onglet **Introduction**, carte **Configuration des données**.
 
 | Notion (manuel) | Symbole | À l'écran |
 |:----------------|:-------:|:----------|
-| Source inter-groupes (le « signal ») | — | ligne **inter-groupes** |
-| Source intra-groupes (le « bruit », résiduelle) | — | ligne **intra-groupes** / résiduelle |
-| Somme de carrés | $SC$ | somme de carrés de chaque source |
-| Degrés de liberté | $ddl$ | degrés de liberté ($k-1$ et $N-k$) |
-| Carré moyen | $CM$ | carré moyen de chaque source |
-| Statistique du test | $F$ | valeur de **F** |
-| Seuil observé | $p$ | **valeur-p** |
+| Nombre de groupes | $k$ | **Nombre de groupes (k)** |
+| Effectif d'un groupe | $n_i$ | **n par groupe** ou **n du groupe i** |
+| Moyenne de la population d'un groupe | $\mu_i$ | volet **Moyennes des populations**; tableau **Paramètres des populations simulées** |
+| Écart-type de la population | $\sigma$ | **σ commun** ou **σ du groupe i** |
+| Forme de la distribution | — | **Forme des distributions** (normale, log-normale, Student à 3 dl, uniforme) |
+| Reproductibilité d'une simulation | — | **Graine aléatoire (facultatif)** |
+| Nature du facteur | — | **Nature de la variable indépendante** (nominale, quantitative / ordinale) |
+| Seuil de signification | $\alpha$ | **Seuil de signification α**, dans les **Réglages communs** |
+| Transformation de la mesure | $\sqrt{Y}$, $\ln(Y)$… | **Transformer la mesure**, dans les **Réglages communs** |
+| Fichier importé | — | source **Importer**, menus **Colonne des groupes (facteur)** et **Colonne de la mesure** |
 
-: Le tableau du test $F$ classique. {#tbl-gloss-anova1}
+: Les réglages des données. {#tbl-gloss-donnees}
+
+## Le tableau d'ANOVA
+
+À l'écran : onglet **ANOVA ▸ ANOVA classique**.
+
+| Notion (manuel) | Symbole | À l'écran |
+|:----------------|:-------:|:----------|
+| Source inter-groupes (le « signal ») | — | ligne **Inter-groupes (facteur)** |
+| Source intra-groupes (le « bruit ») | — | ligne **Intra-groupes (erreur)** |
+| Somme des carrés | $SC$ | colonne **Somme des carrés (SC)** |
+| Degrés de liberté | dl | colonne **dl** ($k-1$, $N-k$ et $N-1$) |
+| Carré moyen | $CM$ | colonne **Carré moyen (CM)** |
+| Statistique du test | $F$ | colonne **F** |
+| Valeur $p$ | $p$ | colonne **p** (« < 0,001 » pour les très petites valeurs) |
+| Valeur critique | $F_{\text{dl}_1;\,\text{dl}_2}$ | phrase **Valeur critique au seuil α** |
+| Loi $F$ du test, région de rejet, valeur $p$ en aire | — | carte **Où se situe le F observé ?** |
+| Calcul détaillé : $n_i(\bar y_i - \bar y)^2$ et $(n_i - 1)s_i^2$ | — | carte **Le calcul pas à pas** |
+| Variance totale en deux parts | $s_Y^2 = V_{\text{inter}} + V_{\text{intra}}$ | panneau **Décomposition de la variance totale** (graphique **Décomposition (inter/intra)**) |
+
+: Le tableau du test $F$ classique. {#tbl-gloss-anova}
 
 ::: {.callout-tip}
-Le rapport testé est $F = CM_{\text{inter}} / CM_{\text{intra}}$ : le carré moyen **inter** (variation entre les moyennes de groupe) rapporté au carré moyen **intra** (variation à l'intérieur des groupes). Voisin de 1, il indique un signal comparable au bruit ; nettement supérieur, il signale un effet.
+Le rapport testé est $F = CM_{\text{inter}} / CM_{\text{intra}}$ : la variabilité entre les moyennes des groupes rapportée à la variabilité à l'intérieur des groupes. Voisin de 1, il indique un signal comparable au bruit; nettement supérieur, il signale un effet.
 :::
 
-## Les tailles d'effet
+## Les tailles d'effet et la puissance
 
-Sous le tableau, l'application affiche trois mesures d'ampleur (onglet **ANOVA → ANOVA classique**).
+À l'écran : sous le tableau d'ANOVA, et dans l'onglet **Taille d'effet et puissance**.
 
-| Notion (manuel) | Symbole | Rôle |
-|:----------------|:-------:|:-----|
-| Rapport de corrélation | $\eta^2$ | proportion de variance expliquée (un peu optimiste) |
-| Oméga carré | $\omega^2$ | même idée, corrigée du biais (peut être légèrement négatif) |
-| $f$ de Cohen | $f$ | effet réexprimé pour la **planification de la puissance** |
+| Notion (manuel) | Symbole | Rôle | À l'écran |
+|:----------------|:-------:|:-----|:----------|
+| Êta carré | $\eta^2$ | part de la variabilité de l'échantillon expliquée (optimiste) | **η² (êta carré)** |
+| Oméga carré | $\omega^2$ | même idée, estimée pour la population (0 si négatif) | **ω² (oméga carré)** |
+| $f$ de Cohen | $f$ | effet utilisé pour la planification | **f de Cohen (d'après η²)** et **(d'après ω²)** |
+| Intervalle de confiance de $\eta^2$ | — | précision de l'effet; niveau $1 - 2\alpha$ | colonne **Signification** et phrase **Pour rapporter le résultat** |
+| Puissance | $1 - \beta$ | probabilité de détecter un effet réel | courbe et tableau de **Planifier la taille d'échantillon** |
+| Effet visé | $f$ | effet qu'on veut pouvoir détecter | curseur **f de Cohen visé** |
 
-: Les mesures de taille d'effet. {#tbl-gloss-effet1}
+: Les mesures d'effet et la puissance. {#tbl-gloss-effet}
 
 ## Choisir le bon test
 
-L'onglet **ANOVA** réunit le test classique et ses variantes robustes. Le choix dépend des **diagnostics**.
+L'onglet **ANOVA** réunit le test classique et ses variantes. Le choix dépend des diagnostics.
 
 | Situation | Test à utiliser | À l'écran (sous-onglet) |
 |:----------|:----------------|:------------------------|
-| Normalité et variances homogènes | ANOVA classique (le plus puissant) | **ANOVA classique** |
-| Variances **inégales** | Welch, ou Brown-Forsythe | **Test de Welch**, **Brown-Forsythe** |
-| Normalité **douteuse** | Kruskal-Wallis (rangs) | **Kruskal-Wallis** |
-| Distributions très irrégulières | test de la médiane | **Test de la médiane** |
-| Aucune hypothèse de loi | rééchantillonnage | **ANOVA Bootstrap** (non-param., param., résiduel) |
-| Planifier l'effectif | courbes de puissance | **Taille d'effet & Puissance** |
+| Normalité et variances homogènes | ANOVA classique (la plus puissante) | **ANOVA classique** |
+| Variances **inégales** | Welch (poids $w_i = n_i/s_i^2$), ou Brown-Forsythe pour les moyennes | **Test de Welch** (tableau **Le poids de chaque groupe**), **Brown-Forsythe** |
+| Variance qui croît avec la moyenne (comptages, durées) | transformation, puis ANOVA classique | menu **Transformer la mesure**, puis **ANOVA classique** |
+| Forte asymétrie, valeurs extrêmes | Kruskal-Wallis (rangs) | **Kruskal-Wallis** |
+| Valeurs extrêmes nombreuses, données ordinales | test de la médiane | **Test de la médiane** |
+| Doute sur la loi de référence | rééchantillonnage | **ANOVA bootstrap** (non paramétrique, paramétrique, résidus) |
 
 : Le test adapté à chaque situation. {#tbl-gloss-tests}
 
 ## Les comparaisons
 
-Une fois qu'un test omnibus a conclu à une différence, l'onglet **Comparaisons** précise *où* elle se loge.
+À l'écran : onglet **Comparaisons**.
 
-| Notion (manuel) | À l'écran (onglet Comparaisons) |
-|:----------------|:--------------------------------|
-| Comparaisons par paires (variances égales) | **Tukey HSD** |
-| Comparaisons par paires (variances inégales) | **Games-Howell**, **Dunnett T3** |
-| Comparaison très conservatrice / contrastes complexes | **Scheffé**, **Bonferroni** |
-| Contrastes planifiés | **Contrastes** (traitement, Helmert, somme, orthogonaux, adjacents, personnalisés) |
-| Effet graduel le long d'un facteur ordonné | **Tendances polynomiales** (linéaire, quadratique, ordre supérieur) |
+| Notion (manuel) | À l'écran |
+|:----------------|:----------|
+| Comparaisons de toutes les paires | **Comparaisons post hoc (toutes les paires)**, menu **Méthode** |
+| Paires, variances égales | **Tukey HSD**, **Bonferroni**, **Holm**, **Scheffé** (et **SNK**, **Duncan**, à titre historique) |
+| Paires sans aucune correction (démonstration) | **LSD de Fisher (sans correction)** |
+| Paires, variances inégales | **Games-Howell**, **Tamhane T2**, **Dunnett T3** |
+| Paires après Kruskal-Wallis | **Dunn (après Kruskal-Wallis)** |
+| Contrastes planifiés | **Contrastes planifiés**, puis **Contrastes prédéfinis** ou **Contrastes personnalisés** |
+| Jeux de contrastes prédéfinis | **Polynomiaux**, **Helmert**, **Traitement**, **Déviation**, **Groupes adjacents** |
+| Groupe témoin des contrastes de traitement | **Groupe témoin (référence)** |
+| Correction pour des contrastes non orthogonaux | **Correction pour tests multiples** (Aucune, Bonferroni, Holm) |
+| Différence significative honnête de Tukey | note **HSD = q × √(CM intra / n)** sous le tableau des paires (effectifs égaux) |
+| Estimation d'un contraste et sa précision | colonnes **$\hat\psi$** et **IC à 95 %** |
+| Part de la $SC_{\text{inter}}$ captée par un contraste | colonnes **SC** et **% SC inter** |
 
 : Les méthodes de comparaison. {#tbl-gloss-comparaisons}
 
 ## Les diagnostics
 
-À l'écran : onglet **Diagnostics → Tests et graphiques**.
+À l'écran : onglet **Diagnostics**.
 
 | Condition | Comment la vérifier | À l'écran |
 |:----------|:--------------------|:----------|
-| Normalité des résidus | graphique quantile-quantile + test | QQ-plot, test de **Shapiro-Wilk** |
-| Homogénéité des variances | test dédié | **Levene**, **Bartlett**, **Fligner-Killeen** |
-| Recommandation automatique | l'onglet suggère le test adapté | recommandation affichée |
+| Normalité des erreurs | test par groupe et sur les résidus; diagramme quantile-quantile | carte **Normalité (Shapiro-Wilk)**; graphique **Diagramme quantile-quantile** |
+| Homogénéité des variances | quatre tests; rapport des variances | carte **Homogénéité des variances** (Levene, Brown-Forsythe, Bartlett, Fligner-Killeen) |
+| Homogénéité, à l'œil | dispersion des résidus par groupe | graphiques **Résidus selon la valeur ajustée** et **Résidus par groupe** |
+| Indépendance (liée à l'ordre) | résidus dans l'ordre de saisie | carte **Indépendance : résidus dans l'ordre des observations** |
+| Synthèse | le test conseillé par les diagnostics | carte **Test recommandé** |
 
-: Les diagnostics des postulats. {#tbl-gloss-diagnostics}
+: Les diagnostics des conditions. {#tbl-gloss-diagnostics}
 
 ## Onglets et gestes
 
 | Ce que vous voulez faire | Où, dans l'application |
 |:-------------------------|:----------------------|
-| Importer ou **simuler** des données (groupes, moyennes, écarts-types) | onglet **Introduction** (source *Importer* / *Simuler*) |
-| Explorer les données, voir la **décomposition inter/intra** | **Description des données → Visualisation** (*Décomposition (inter/intra)*) |
-| Lancer le test et lire les tailles d'effet | **ANOVA → ANOVA classique** |
-| Transformer la variable (racine, log, carré, inverse, arc-sinus) | menu **Transformation**, dans le panneau latéral |
-| Comparer les groupes deux à deux | onglet **Comparaisons** |
+| Importer ou **simuler** des données | onglet **Introduction** (source **Importer** ou **Simuler**), bouton **Générer les données** |
+| Sauvegarder un échantillon simulé | bouton **Télécharger**, au bas de la carte **Configuration des données** |
+| Explorer les données, voir la **décomposition inter/intra** | **Description des données ▸ Visualisation** (**Décomposition (inter/intra)**) |
+| Lancer le test et lire les tailles d'effet | **ANOVA ▸ ANOVA classique** |
+| Planifier la taille d'échantillon | onglet **Taille d'effet et puissance** |
+| Transformer la mesure | menu **Transformer la mesure**, dans les **Réglages communs** |
+| Comparer les groupes | onglet **Comparaisons** |
 | Vérifier les conditions | onglet **Diagnostics** |
-| Éprouver les tests par simulation Monte-Carlo | onglet **Expérimentation** (*Configuration des moyennes / tailles / écarts-types*) |
+| Éprouver les tests par simulation | onglet **Expérimentation** (menu **Scénario à étudier**, bouton **Lancer l'expérimentation**) |
+| Voir la loi de $F$ sous $H_0$ et sous $H_1$ | scénario **La loi de F sous H₀ et sous H₁** |
+| Mesurer le risque global des comparaisons multiples | scénario **Comparaisons multiples : le risque global** |
 
-: Guide d'accès rapide. {#tbl-gloss-onglets1}
+: Guide d'accès rapide. {#tbl-gloss-onglets}
 
-::: {.callout-tip}
-L'onglet **Expérimentation** répète une analyse des milliers de fois pour révéler le **taux d'erreur de type I** réellement observé — l'occasion de voir, par exemple, le test classique « déraper » sous variances et effectifs inégaux, là où Welch tient le seuil.
-:::
+## Lexique
+
+**Analyse de tendance.** Décomposition de la $SC_{\text{inter}}$ en composantes polynomiales (linéaire, quadratique…) quand les niveaux du facteur sont ordonnés.
+
+**Bootstrap.** Méthode qui reconstruit la distribution d'une statistique en tirant avec remise dans les données. En ANOVA, elle fournit la distribution de $F$ sous $H_0$ sans recourir à la loi de Fisher.
+
+**Carré moyen (CM).** Somme des carrés divisée par ses degrés de liberté; c'est une variance. Le CM intra estime $\sigma^2$; le CM inter estime $\sigma^2$ augmentée d'un terme qui croît avec l'écart entre les moyennes de population.
+
+**Comparaison post hoc.** Comparaison de toutes les paires de moyennes, choisie après l'analyse, avec une correction pour le nombre de comparaisons.
+
+**Conservateur (test).** Test qui rejette $H_0$ moins souvent que le seuil $\alpha$ annoncé quand $H_0$ est vraie; il perd de la puissance.
+
+**Contraste.** Combinaison de moyennes $\sum c_i \mu_i$ dont les coefficients totalisent zéro; il mesure une différence ciblée.
+
+**Contrastes orthogonaux.** Contrastes dont les estimations sont indépendantes ($\sum c_i d_i / n_i = 0$); $k - 1$ contrastes orthogonaux décomposent toute la $SC_{\text{inter}}$.
+
+**Degrés de liberté (dl).** Nombre d'écarts qui peuvent varier librement dans une somme des carrés : $k - 1$ pour l'inter, $N - k$ pour l'intra.
+
+**Diagramme quantile-quantile.** Graphique qui place chaque résidu en face de la valeur attendue sous une loi normale; des points alignés sur la droite indiquent une normalité plausible.
+
+**Espérance d'un carré moyen.** Valeur moyenne d'un carré moyen sur un très grand nombre d'échantillons : $E(CM_{\text{intra}}) = \sigma^2$ et $E(CM_{\text{inter}}) = \sigma^2 + \sum n_i\tau_i^2/(k-1)$.
+
+**Étendue studentisée.** Écart entre la plus grande et la plus petite de $k$ moyennes, divisé par leur erreur type; sa loi fonde le test de Tukey.
+
+**Erreur d'échantillonnage.** Écart entre une statistique calculée sur l'échantillon et le paramètre de la population qu'elle estime.
+
+**Erreur de type I.** Rejeter $H_0$ alors qu'elle est vraie; sa probabilité est le seuil $\alpha$.
+
+**Erreur de type II.** Ne pas rejeter $H_0$ alors qu'elle est fausse; sa probabilité est $\beta$.
+
+**Erreur type.** Écart-type de l'estimation d'une moyenne, $s / \sqrt{n}$; elle mesure la précision de la moyenne.
+
+**Hétéroscédasticité.** Inégalité des variances entre les groupes.
+
+**HSD (différence significative honnête).** Plus petite différence entre deux moyennes que le test de Tukey déclare significative : $q \sqrt{CM_{\text{intra}}/n}$.
+
+**Intervalle de confiance de $\eta^2$.** Plage des valeurs de l'effet compatibles avec le $F$ observé, obtenue en inversant la loi $F$ non centrée; au niveau $1 - 2\alpha$, sa borne inférieure dépasse 0 exactement quand le test est significatif.
+
+**Intervalle de fluctuation.** Plage dans laquelle tombe, dans 95 % des simulations, le taux de rejet observé d'un test dont le vrai taux vaut $\alpha$.
+
+**Libéral (test).** Test qui rejette $H_0$ plus souvent que le seuil $\alpha$ annoncé quand $H_0$ est vraie.
+
+**Loi F non centrée.** Loi de la statistique $F$ quand $H_1$ est vraie; elle sert à calculer la puissance et l'intervalle de confiance de $\eta^2$.
+
+**Paramètre de non-centralité ($\lambda$).** Mesure du décalage de la loi $F$ sous $H_1$ : $\lambda = \sum n_i\tau_i^2/\sigma^2 = f^2 N$.
+
+**Poids de Welch.** Pondération $w_i = n_i/s_i^2$ de chaque groupe dans le test de Welch : l'inverse du carré de l'erreur type de sa moyenne.
+
+**Puissance.** Probabilité de rejeter $H_0$ quand elle est fausse, $1 - \beta$.
+
+**Rang.** Position d'une observation quand toutes les observations sont classées de la plus petite (rang 1) à la plus grande (rang $N$); base du test de Kruskal-Wallis.
+
+**Résidu.** Écart d'une observation à la moyenne de son groupe; il estime l'erreur du modèle.
+
+**Risque global.** Probabilité de commettre au moins une erreur de type I dans un ensemble de comparaisons.
+
+**Somme des carrés (SC).** Somme d'écarts au carré; la $SC_{\text{totale}}$ se décompose en $SC_{\text{inter}}$ et $SC_{\text{intra}}$.
+
+**Stabilisation de la variance.** Transformation qui rend la variance à peu près constante quand elle dépend de la moyenne : racine carrée pour des comptages, logarithme pour des mesures dont l'écart-type est proportionnel à la moyenne.
+
+**Taille d'effet.** Mesure de l'ampleur d'un effet, indépendante de la taille de l'échantillon ($\eta^2$, $\omega^2$, $f$).
+
+**Valeur critique.** Valeur de la statistique au-delà de laquelle on rejette $H_0$ au seuil $\alpha$.
+
+**Valeur $p$.** Probabilité, si $H_0$ était vraie, d'obtenir une statistique au moins aussi extrême que celle observée.
+
+**Variabilité inter-groupes.** Variabilité des moyennes des groupes autour de la moyenne générale (le « signal »).
+
+**Variabilité intra-groupe.** Variabilité des observations autour de la moyenne de leur groupe (le « bruit »).

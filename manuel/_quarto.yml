@@ -1,34 +1,71 @@
 project:
   type: book
   output-dir: _book
+  # Fichiers de données téléchargeables depuis le manuel
+  resources:
+    - donnees/*.csv
 
 lang: fr
+language:
+  title-block-author-single: "Auteur"
+  title-block-published: "Date"
+  crossref-fig-title: "Figure"
+  crossref-tbl-title: "Tableau"
+  crossref-fig-prefix: "figure"
+  crossref-tbl-prefix: "tableau"
+  crossref-eq-prefix: "équation"
+  crossref-ch-prefix: "chapitre"
+  crossref-sec-prefix: "section"
+  crossref-apx-prefix: "annexe"
+  section-title-appendices: "Annexe"
+  section-title-footnotes: "Notes"
 bibliography: references.bib
+# Quarto (livre) ignore « lang » pour la bibliographie : il faut un style
+# CSL dont la langue par défaut est le français.
+csl: chicago-fr.csl
 
 book:
   title: "L'analyse de variance"
   subtitle: "Un laboratoire pour comprendre l'ANOVA à un facteur"
   author: "Daniel Coulombe, Ph.D."
   cover-image: images/cover.png
+  cover-image-alt: "Couverture du manuel L'analyse de variance"
   date: today
   search: true
   page-navigation: true
   downloads: [pdf, epub]
   chapters:
     - index.qmd
-    - 01-introduction.qmd
-    - 02-decrire.qmd
-    - 03-anova.qmd
-    - 04-comparaisons.qmd
-    - 05-diagnostics.qmd
-    - 06-experimenter.qmd
+    - part: "Comprendre"
+      chapters:
+        - 01-introduction.qmd
+        - 02-decrire.qmd
+    - part: "Tester"
+      chapters:
+        - 03-anova.qmd
+        - 04-variantes.qmd
+    - part: "Localiser et vérifier"
+      chapters:
+        - 05-comparaisons.qmd
+        - 06-diagnostics.qmd
+    - part: "Éprouver et pratiquer"
+      chapters:
+        - 07-experimenter.qmd
+        - 08-exemple-guide.qmd
     - glossaire.qmd
     - references.qmd
+  appendices:
+    - A-solutionnaire.qmd
 
 execute:
   freeze: auto
   echo: false
   warning: false
+  message: false
+
+knitr:
+  opts_chunk:
+    dev: "ragg_png"
 
 crossref:
   chapters: true
